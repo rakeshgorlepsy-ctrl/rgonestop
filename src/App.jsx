@@ -5,11 +5,11 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import SplashScreen from './components/SplashScreen';
 
 // Core standard pages
-import HomePage from './pages/HomePage';
+import HomePage from './views/HomePage';
 
 // Lazy loaded sub-brand experiences to preserve performance speeds 
-const HashtagMemoriesPage = lazy(() => import('./pages/HashtagMemoriesPage'));
-const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
+const HashtagMemoriesPage = lazy(() => import('./views/HashtagMemoriesPage'));
+const AdminDashboard = lazy(() => import('./views/AdminDashboard'));
 
 function App() {
   // Show splash only once per session (not on every page nav, only on first visit)
