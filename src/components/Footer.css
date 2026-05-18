@@ -1,0 +1,248 @@
+.footer {
+  background-color: var(--primary-color);
+  color: var(--white);
+  padding-top: 5rem;
+}
+
+.footer.footer-dark {
+  background-color: #050505;
+  border-top: 1px solid #222;
+}
+
+.footer.footer-dark .footer-bottom {
+  background-color: #000;
+}
+
+.footer.footer-light {
+  background-color: #F9F9F9;
+  color: #333333;
+  border-top: 1px solid #EEEEEE;
+}
+
+.footer.footer-light .footer-bottom {
+  background-color: #F1F1F1;
+}
+
+.footer.footer-light .footer-bottom p {
+  color: #888888;
+}
+
+.footer.footer-light .footer-brand p,
+.footer.footer-light .footer-contact li,
+.footer.footer-light .footer-contact h3,
+.footer.footer-light .footer-instagram h3 {
+  color: #333333;
+}
+
+.footer.footer-light .social-box {
+  background: rgba(0,0,0,0.05);
+  color: #333333;
+}
+
+.footer.footer-light .highlight-contact {
+  background: white;
+  border: 1px solid #EEEEEE;
+  border-left: 3px solid var(--accent-orange);
+}
+
+.footer-container {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1.5fr;
+  gap: 4rem;
+  padding-bottom: 4rem;
+}
+
+.footer-logo-image {
+  max-width: 140px;
+  max-height: 50px;
+  object-fit: contain;
+  margin-bottom: 1.5rem;
+  background-color: white;
+  padding: 6px;
+  border-radius: 8px;
+}
+
+.footer-brand p {
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 2rem;
+  line-height: 1.8;
+  max-width: 350px;
+  font-size: 0.95rem;
+}
+
+.social-links {
+  display: flex;
+  gap: 1rem;
+}
+
+.social-box {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--white);
+  transition: all 0.3s ease;
+  border: 1px solid rgba(255,255,255,0.05);
+}
+
+.social-box:hover {
+  transform: translateY(-4px);
+  background: var(--white);
+}
+
+.social-box.instagram:hover {
+  color: #E1306C;
+  box-shadow: 0 5px 15px rgba(225, 48, 108, 0.4);
+}
+
+.social-box.whatsapp:hover {
+  color: #25D366;
+  box-shadow: 0 5px 15px rgba(37, 211, 102, 0.4);
+}
+
+.footer-contact h3, .footer-instagram h3 {
+  color: var(--white);
+  font-size: 1.25rem;
+  margin-bottom: 1.8rem;
+  font-family: 'Outfit', sans-serif;
+  letter-spacing: 0.5px;
+}
+
+.footer-contact ul {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.footer-contact li {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.95rem;
+}
+
+.footer-contact li svg {
+  color: var(--secondary-color);
+  flex-shrink: 0;
+}
+
+.highlight-contact {
+  background: rgba(255,255,255,0.08);
+  padding: 1rem;
+  border-radius: var(--border-radius-sm);
+  border-left: 3px solid var(--accent-orange);
+}
+
+.whatsapp-number {
+  color: var(--accent-orange) !important;
+  font-weight: 700;
+  font-size: 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.chat-badge {
+  font-size: 0.75rem;
+  background: var(--accent-orange);
+  color: white;
+  padding: 0.2rem 0.6rem;
+  border-radius: 50px;
+  display: inline-block;
+  align-self: flex-start;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: transform 0.2s ease;
+}
+
+.highlight-contact:hover .chat-badge {
+  transform: scale(1.05);
+}
+
+.instagram-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.insta-mock-img {
+  aspect-ratio: 1 / 1;
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+}
+
+.insta-mock-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.insta-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.insta-mock-img:hover img {
+  transform: scale(1.1);
+}
+
+.insta-mock-img:hover .insta-overlay {
+  opacity: 1;
+}
+
+.follow-us-link {
+  color: var(--secondary-color);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  transition: color 0.2s;
+}
+
+.follow-us-link:hover {
+  color: var(--white);
+}
+
+.footer-bottom {
+  background-color: rgba(0,0,0,0.2);
+  padding: 1.5rem 0;
+  text-align: center;
+}
+
+.footer-bottom p {
+  color: rgba(255,255,255,0.5);
+  font-size: 0.9rem;
+}
+
+@media (max-width: 900px) {
+  .footer-container {
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+  }
+  .footer-brand {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 600px) {
+  .footer-container {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+}

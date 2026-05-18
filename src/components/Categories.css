@@ -1,0 +1,95 @@
+.categories-circle-section {
+  padding: 1.5rem 1.5rem;
+}
+
+.section-header-compact {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.section-header-compact h2 {
+  font-size: 1.8rem;
+  color: var(--text-dark);
+  margin-bottom: 0.8rem;
+  letter-spacing: -0.2px;
+}
+
+.title-underline {
+  height: 3px;
+  width: 50px;
+  background: var(--primary-color);
+  border-radius: 4px;
+  margin: 0 auto;
+}
+
+.categories-duo-row {
+  display: flex;
+  justify-content: center; /* Absolute center */
+  align-items: center;
+  max-width: 100%;
+  margin: 0 auto;
+  gap: 4rem;
+}
+
+.category-circle-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  cursor: pointer;
+  transition: transform 0.4s ease;
+  width: 100%;
+  max-width: 250px; /* anchors boundary for text alignment */
+}
+
+.category-img {
+  width: 250px; /* Fixed equal bounding box */
+  height: 180px; /* Fixed equal bounding box */
+  object-fit: contain; /* Scales PNG inside equally */
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  filter: drop-shadow(0 5px 8px rgba(0,0,0,0.06)); /* Soft shadow hugging the PNG shape */
+  border-radius: 0;
+}
+
+.category-circle-item:hover .category-img {
+  transform: scale(1.08) translateY(-6px); /* Button effect tied directly to the image */
+  filter: drop-shadow(0 15px 25px rgba(0,0,0,0.15));
+}
+
+.category-circle-name {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  width: 100%;
+}
+
+.category-circle-item:first-child .category-circle-name {
+  text-align: left;
+}
+
+.category-circle-item:last-child .category-circle-name {
+  text-align: right;
+}
+
+@media (max-width: 768px) {
+  .categories-duo-row {
+    gap: 1.2rem;
+    justify-content: center; /* Absolute center for mobile */
+    overflow-x: visible;
+    padding-bottom: 1rem;
+    flex-wrap: nowrap; /* Force side-by-side */
+  }
+  
+  .category-circle-item {
+    max-width: 185px; /* Bumped up space allowance */
+  }
+  
+  .category-img {
+    width: 175px; /* Increased from 150 to a pro-sized 175 */
+    height: 135px;
+  }
+  
+  .category-circle-name {
+    font-size: 1.05rem; /* Better readability */
+  }
+}

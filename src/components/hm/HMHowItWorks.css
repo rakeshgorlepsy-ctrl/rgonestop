@@ -1,0 +1,88 @@
+.hm-how-it-works {
+  padding: 5rem 0;
+  background-color: var(--hm-gray-light);
+}
+
+.hm-steps-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 3rem;
+  margin-top: 3rem;
+}
+
+.hm-step-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  position: relative;
+}
+
+.hm-step-icon-wrap {
+  width: 80px;
+  height: 80px;
+  background-color: var(--hm-white);
+  color: var(--hm-red);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+  position: relative;
+  z-index: 2;
+}
+
+.hm-step-number {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  width: 25px;
+  height: 25px;
+  background-color: var(--hm-yellow);
+  color: var(--hm-dark);
+  font-size: 0.8rem;
+  font-weight: 800;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.hm-step-title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin-bottom: 0.8rem;
+  color: var(--hm-dark);
+}
+
+.hm-step-description {
+  font-size: 1rem;
+  color: #666;
+  line-height: 1.5;
+}
+
+.hm-step-connector {
+  position: absolute;
+  top: 40px;
+  left: calc(50% + 40px);
+  width: calc(100% - 80px + 3rem);
+  height: 2px;
+  background: dashed #ccc;
+  border-top: 2px dashed #ccc;
+  z-index: 1;
+}
+
+@media (max-width: 768px) {
+  .hm-steps-container {
+    flex-direction: column;
+    gap: 4rem;
+  }
+  
+  .hm-step-connector {
+    display: none;
+  }
+}

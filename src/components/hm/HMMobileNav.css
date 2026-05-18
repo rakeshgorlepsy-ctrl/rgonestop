@@ -1,0 +1,94 @@
+.hm-mobile-nav {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 70px;
+  background-color: #FFFFFF; /* Hardcoded for safety across routes */
+  box-shadow: 0 -4px 15px rgba(0,0,0,0.1);
+  z-index: 1200;
+  align-items: center;
+  justify-content: space-around;
+  padding: 0.5rem 1rem;
+  border-top: 1px solid #EEEEEE;
+}
+
+@media (max-width: 768px) {
+  .hm-mobile-nav {
+    display: flex;
+  }
+  
+  /* Ensure the page content doesn't get hidden under the nav */
+  body {
+    padding-bottom: 70px;
+  }
+}
+
+.hm-mobile-nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+  color: #666666;
+  text-decoration: none;
+  font-size: 0.7rem;
+  font-weight: 700;
+  transition: color 0.3s ease;
+  min-width: 60px;
+  /* Button reset — looks like icon item, not a form button */
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  font-family: inherit;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.hm-mobile-nav-item svg {
+  color: #666666;
+  transition: color 0.3s ease;
+}
+
+.hm-mobile-nav-item:hover,
+.hm-mobile-nav-item:active,
+.hm-mobile-nav-item.active {
+  color: #E91E63;
+}
+
+.hm-mobile-nav-item:hover svg,
+.hm-mobile-nav-item:active svg,
+.hm-mobile-nav-item.active svg {
+  color: #E91E63;
+}
+
+/* WhatsApp Highlight */
+.hm-mobile-nav-item.whatsapp {
+  position: relative;
+  top: -15px; /* Float slightly higher */
+}
+
+.hm-mobile-nav-icon-bg {
+  width: 50px;
+  height: 50px;
+  background-color: #25D366;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(37, 211, 102, 0.4);
+  border: 4px solid #FFFFFF;
+}
+
+.hm-mobile-nav-item.whatsapp span {
+  margin-top: 5px;
+}
+
+.hm-mobile-nav-avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1.5px solid #E91E63;
+}
+

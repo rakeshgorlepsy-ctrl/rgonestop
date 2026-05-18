@@ -1,0 +1,640 @@
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  padding: 1rem 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.header-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+}
+
+.logo-image {
+  max-width: 160px;
+  max-height: 50px;
+  object-fit: contain;
+  cursor: pointer;
+}
+
+/* Location Selector & Dropdown Override wrapper */
+.header-location-wrapper {
+  position: relative;
+}
+
+.header-location {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: var(--border-radius-sm);
+  transition: var(--transition);
+  user-select: none;
+}
+
+.header-location:hover {
+  background: rgba(31, 58, 138, 0.05);
+}
+
+.location-icon {
+  color: var(--primary-color);
+}
+
+.location-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.location-label {
+  font-size: 0.7rem;
+  color: var(--text-light);
+  font-weight: 500;
+}
+
+.location-value {
+  font-size: 0.9rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+  color: var(--text-dark);
+}
+
+/* Transitions for arrow down */
+.chevron-transition {
+  transition: transform 0.25s ease;
+}
+
+.chevron-transition.rotate {
+  transform: rotate(180deg);
+}
+
+/* City Manual Override Card Styles */
+.location-dropdown-card {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 0;
+  width: 250px;
+  border-radius: var(--border-radius-md);
+  box-shadow: var(--shadow-md), 0 10px 25px rgba(0,0,0,0.05);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 1rem;
+  z-index: 110;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.detect-now-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  background: rgba(31, 58, 138, 0.08);
+  color: var(--primary-color);
+  border: none;
+  padding: 0.6rem;
+  border-radius: var(--border-radius-sm);
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.detect-now-btn:hover {
+  background: var(--primary-color);
+  color: white;
+}
+
+.dropdown-divider {
+  font-size: 0.7rem;
+  color: #9ca3af;
+  text-transform: uppercase;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.dropdown-divider::before, .dropdown-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: #e5e7eb;
+}
+
+.cities-grid-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.city-row-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  background: transparent;
+  border: none;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  border-radius: var(--border-radius-sm);
+  color: var(--text-dark);
+  cursor: pointer;
+  text-align: left;
+  transition: var(--transition);
+}
+
+.city-row-btn:hover {
+  background: rgba(31, 58, 138, 0.05);
+  color: var(--primary-color);
+}
+
+.city-row-btn.active {
+  background: rgba(31, 58, 138, 0.08);
+  color: var(--primary-color);
+  font-weight: 600;
+}
+
+.check-color {
+  color: var(--primary-color);
+}
+
+/* Search Bar & Suggestion overlays */
+.header-search {
+  flex: 1;
+  max-width: 500px;
+  display: flex;
+  align-items: center;
+  background: #f0f0f5;
+  border-radius: 50px;
+  padding: 0.3rem 0.3rem 0.3rem 1.2rem;
+  transition: var(--transition);
+  border: 2px solid transparent;
+  position: relative;
+}
+
+.header-search:focus-within {
+  border-color: rgba(31, 58, 138, 0.3);
+  background: var(--white);
+  box-shadow: 0 0 0 4px rgba(31, 58, 138, 0.08);
+}
+
+.search-input-wrapper {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  position: relative;
+}
+
+.search-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  outline: none;
+  font-family: inherit;
+  font-size: 0.95rem;
+  color: var(--text-dark);
+  padding-right: 1.5rem;
+}
+
+.clear-search-btn {
+  position: absolute;
+  right: 0.25rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.search-button {
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 50px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.search-button:hover {
+  background: var(--primary-light);
+}
+
+/* Real-time search suggestions floating box */
+.search-suggestions-dropdown {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 0;
+  width: 100%;
+  border-radius: var(--border-radius-md);
+  box-shadow: var(--shadow-md), 0 10px 25px rgba(0,0,0,0.05);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 0.5rem;
+  z-index: 110;
+  display: flex;
+  flex-direction: column;
+  max-height: 280px;
+  overflow-y: auto;
+}
+
+.suggestion-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  background: transparent;
+  border: none;
+  padding: 0.6rem 0.8rem;
+  font-size: 0.85rem;
+  border-radius: var(--border-radius-sm);
+  color: var(--text-dark);
+  cursor: pointer;
+  text-align: left;
+  transition: var(--transition);
+}
+
+.suggestion-row:hover {
+  background: rgba(31, 58, 138, 0.05);
+}
+
+.suggestion-lens-icon {
+  color: #9ca3af;
+}
+
+.suggestion-row:hover .suggestion-lens-icon {
+  color: var(--primary-color);
+}
+
+.suggestion-name {
+  flex: 1;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.suggestion-badge {
+  font-size: 0.65rem;
+  padding: 0.15rem 0.4rem;
+  border-radius: 50px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.suggestion-badge.category {
+  background: #e0f2fe;
+  color: #0369a1;
+}
+
+.suggestion-badge.product {
+  background: #fef3c7;
+  color: #b45309;
+}
+
+.suggestion-badge.listing {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+/* Actions Menu & Profile Avatar dropdown setup */
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.action-btn {
+  background: transparent;
+  border: none;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: inherit;
+  font-weight: 600;
+  color: var(--text-dark);
+  cursor: pointer;
+  font-size: 0.95rem;
+  transition: var(--transition);
+}
+
+.action-btn:hover {
+  color: var(--primary-color);
+}
+
+/* User Account Button & Dropdown Styles */
+.user-dropdown-wrapper {
+  position: relative;
+}
+
+.user-profile-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.75rem;
+  border-radius: 50px;
+  background: rgba(31, 58, 138, 0.03);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.user-profile-btn:hover {
+  background: rgba(31, 58, 138, 0.06);
+  color: var(--primary-color);
+}
+
+.user-header-avatar {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: #e2e8f0;
+  object-fit: cover;
+}
+
+.user-header-name {
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.user-dropdown-card {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  width: 280px;
+  border-radius: var(--border-radius-md);
+  box-shadow: var(--shadow-md), 0 10px 25px rgba(0,0,0,0.05);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 1rem;
+  z-index: 110;
+  display: flex;
+  flex-direction: column;
+}
+
+.user-dropdown-profile-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.25rem 0.25rem 0.5rem 0.25rem;
+}
+
+.user-menu-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #e2e8f0;
+}
+
+.user-menu-info h4 {
+  font-size: 0.95rem;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  color: var(--text-dark);
+}
+
+.user-menu-info p {
+  font-size: 0.75rem;
+  color: var(--text-light);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 170px;
+}
+
+.user-menu-listings-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding: 0.5rem 0.25rem;
+}
+
+.user-menu-listings-section h5 {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #9ca3af;
+  text-transform: uppercase;
+  margin-bottom: 0.2rem;
+}
+
+.no-businesses-hint {
+  font-size: 0.75rem;
+  color: #9ca3af;
+  font-style: italic;
+}
+
+.user-menu-listings-scroll {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  max-height: 100px;
+  overflow-y: auto;
+}
+
+.menu-business-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.8rem;
+  padding: 0.35rem 0.5rem;
+  background: #f8fafc;
+  border-radius: var(--border-radius-sm);
+  border-left: 2.5px solid var(--primary-color);
+}
+
+.menu-business-item .b-name {
+  font-weight: 600;
+  color: var(--text-dark);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 130px;
+}
+
+.menu-business-item .b-city {
+  font-size: 0.7rem;
+  color: var(--text-light);
+  font-weight: 500;
+}
+
+.user-logout-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  background: transparent;
+  border: 1px solid #fee2e2;
+  color: #ef4444;
+  padding: 0.6rem;
+  border-radius: var(--border-radius-sm);
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: var(--transition);
+  margin-top: 0.5rem;
+}
+
+.user-logout-btn:hover {
+  background: #fef2f2;
+  border-color: #fca5a5;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .header-location .location-label, .header-location .location-value {
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .header-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.5rem;
+  }
+  
+  .header-logo {
+    flex: 0 0 auto;
+  }
+
+  .header-location-wrapper {
+    flex: 0 0 auto;
+  }
+
+  .header-location {
+    padding: 0;
+  }
+  
+  .header-actions {
+    flex: 0 0 auto;
+    gap: 1rem;
+  }
+  
+  .header-search {
+    flex: 1 1 100%;
+    order: 4;
+    max-width: 100%;
+    margin-top: 0.2rem;
+  }
+  
+  .add-business-btn span {
+    display: none;
+  }
+  
+  .login-btn span {
+    display: none;
+  }
+
+  .user-header-name {
+    display: none; /* hide name on mobile, keep avatar and chevron */
+  }
+  
+  .location-label {
+    display: none; /* Hide label to save space, keep city */
+  }
+}
+
+@media (max-width: 480px) {
+  .header-container {
+    gap: 0.8rem;
+  }
+  .header-location-wrapper {
+    display: none; /* Only hide on extremely small phones if space is totally gone */
+  }
+}
+
+/* Location Search inside dropdown */
+.loc-search-input-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 8px;
+  padding: 0.4rem 0.75rem;
+  transition: all 0.2s ease;
+  margin-bottom: 0.25rem;
+}
+
+.loc-search-input-wrapper:focus-within {
+  background: white;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(31, 58, 138, 0.1);
+}
+
+.loc-search-icon {
+  color: #9ca3af;
+}
+
+.loc-search-input {
+  border: none;
+  background: transparent;
+  outline: none;
+  font-size: 0.82rem;
+  color: var(--text-dark);
+  width: 100%;
+}
+
+.scrollable-list {
+  max-height: 200px;
+  overflow-y: auto;
+  padding-right: 0.2rem;
+}
+
+/* Scrollbar styles for cities list */
+.scrollable-list::-webkit-scrollbar {
+  width: 4px;
+}
+.scrollable-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+.scrollable-list::-webkit-scrollbar-thumb {
+  background: rgba(0,0,0,0.1);
+  border-radius: 10px;
+}
+
+.city-suggestion-row {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.city-name-txt {
+  font-weight: 500;
+}
+
+.city-pincode-txt {
+  font-size: 0.72rem;
+  color: #9ca3af;
+}
+
+.no-cities-found {
+  font-size: 0.78rem;
+  color: #9ca3af;
+  text-align: center;
+  padding: 0.5rem 0;
+  font-style: italic;
+}
+
+.loc-section-title {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #9ca3af;
+  text-transform: uppercase;
+  margin-top: 0.5rem;
+  margin-bottom: 0.25rem;
+  padding-left: 0.25rem;
+  letter-spacing: 0.25px;
+}

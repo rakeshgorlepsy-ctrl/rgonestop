@@ -1,0 +1,91 @@
+.hm-circle-nav-section {
+  background-color: var(--hm-bg);
+  padding: 1.5rem 0;
+  border-bottom: 1px solid var(--hm-border);
+}
+
+.hm-circle-nav-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 2rem;
+  padding: 0.5rem 0;
+}
+
+.hm-circle-nav-wrapper::-webkit-scrollbar {
+  display: none;
+}
+
+.hm-circle-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.8rem;
+  min-width: 80px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.hm-circle-icon-box {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background-color: #FDF1F1; /* Soft pink bg for icons */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid transparent;
+}
+
+.hm-circle-icon-box img {
+  width: 35px;
+  height: 35px;
+  object-fit: contain;
+}
+
+.hm-circle-item span {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--hm-text);
+  white-space: nowrap;
+}
+
+.hm-circle-item:hover .hm-circle-icon-box {
+  transform: translateY(-5px);
+  background-color: var(--hm-white);
+  border-color: var(--hm-accent);
+  box-shadow: 0 10px 20px rgba(233, 30, 99, 0.15);
+}
+
+.hm-circle-item:hover span {
+  color: var(--hm-accent);
+}
+
+@media (max-width: 768px) {
+  .hm-circle-nav-wrapper {
+    gap: 1.2rem;
+    padding: 0.8rem 0;
+  }
+  
+  .hm-circle-item {
+    min-width: 75px;
+    gap: 0.5rem;
+  }
+  
+  .hm-circle-icon-box {
+    width: 65px;
+    height: 65px;
+  }
+  
+  .hm-circle-icon-box img {
+    width: 32px;
+    height: 32px;
+  }
+
+  .hm-circle-item span {
+    font-size: 0.8rem;
+    font-weight: 700;
+  }
+}

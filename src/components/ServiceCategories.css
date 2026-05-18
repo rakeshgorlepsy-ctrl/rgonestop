@@ -1,0 +1,118 @@
+/* --- SERVICE CATEGORIES SECTION --- */
+.service-categories-section {
+  padding: 3rem 0 4rem 0;
+}
+
+.service-categories-subtitle {
+  font-size: 1rem;
+  color: #64748b;
+  text-align: center;
+  margin-top: 0.35rem;
+  margin-bottom: 0.75rem;
+  font-weight: 500;
+}
+
+.service-categories-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+  margin-top: 2.5rem;
+}
+
+/* --- CATEGORY CARD --- */
+.service-category-card {
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  border-radius: 16px;
+  padding: 1.75rem 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 1rem;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.015);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.service-category-icon-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.01);
+  transition: all 0.3s ease;
+}
+
+.service-category-emoji {
+  font-size: 2.2rem;
+  line-height: 1;
+}
+
+.service-category-card-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0;
+  transition: color 0.3s ease;
+}
+
+/* Hover Effects */
+.service-category-card:hover {
+  transform: translateY(-5px);
+  background: #ffffff;
+  border-color: rgba(31, 58, 138, 0.1);
+  box-shadow: 0 10px 25px rgba(31, 58, 138, 0.06);
+}
+
+.service-category-card:hover .service-category-icon-wrapper {
+  background: rgba(31, 58, 138, 0.04);
+  transform: scale(1.1);
+}
+
+.service-category-card:hover .service-category-card-title {
+  color: var(--primary-color);
+}
+
+/* --- RESPONSIVE ADAPTATIONS --- */
+@media (max-width: 1024px) {
+  .service-categories-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .service-categories-section {
+    padding: 2rem 0 3rem 0;
+  }
+
+  .service-categories-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+
+  .service-category-card {
+    padding: 1.25rem 0.75rem;
+    border-radius: 12px;
+  }
+
+  .service-category-emoji {
+    font-size: 1.8rem;
+  }
+
+  .service-category-card-title {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .service-categories-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+  }
+}

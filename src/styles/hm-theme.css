@@ -1,0 +1,81 @@
+/* 
+  Hashtag Memories Scoped UI Isolation
+  Strictly prefixed to prevent leakage onto the primary RG OneStop layouts. 
+*/
+
+.hm-page {
+  /* Brand Constants - Premium Gifting Palette */
+  --hm-bg: #FFFFFF;
+  --hm-bg-light: #F8F9FA;
+  --hm-text: #1A1A1A;
+  --hm-text-light: #666666;
+  --hm-accent: #E91E63; /* Rose Pink */
+  --hm-accent-hover: #C2185B;
+  --hm-gold: #D4AF37; /* Metallic Gold */
+  --hm-gold-light: #FFF8E1;
+  --hm-teal: #009688;
+  --hm-border: #EEEEEE;
+  --hm-white: #FFFFFF;
+
+  max-width: 100vw;
+  overflow-x: hidden;
+  background-color: var(--hm-bg);
+  color: var(--hm-text);
+  font-family: 'Outfit', sans-serif;
+}
+
+/* Scoped Headings for HM */
+.hm-page h1, .hm-page h2, .hm-page h3, .hm-page h4 {
+  color: var(--hm-text);
+  font-family: 'Outfit', sans-serif;
+  font-weight: 700;
+}
+
+.hm-page p {
+  color: var(--hm-text-light);
+}
+
+/* Premium Global HM Button */
+.hm-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  padding: 0.8rem 2rem;
+  background-color: var(--hm-gold);
+  color: var(--hm-white);
+  font-weight: 700;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-size: 1.05rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.hm-btn:hover {
+  background-color: #B8960C;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(212, 175, 55, 0.4);
+}
+
+.hm-btn.accent {
+  background-color: var(--hm-accent);
+}
+
+.hm-btn.accent:hover {
+  background-color: var(--hm-accent-hover);
+  box-shadow: 0 5px 15px rgba(233, 30, 99, 0.3);
+}
+
+/* Global utility */
+.hm-container {
+  max-width: 1300px; /* Wider container for premium gifted feel */
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.hm-section-padding {
+  padding: 4rem 0;
+}

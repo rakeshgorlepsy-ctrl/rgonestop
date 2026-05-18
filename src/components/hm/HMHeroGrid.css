@@ -1,0 +1,195 @@
+.hm-hero-grid-section {
+  padding: 2.5rem 0;
+  background-color: var(--hm-bg);
+}
+
+.hm-hero-grid-layout {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 1.5rem;
+  height: 550px;
+}
+
+/* Large Main Banner Styling */
+.hm-hero-main-card {
+  position: relative;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+.hm-hero-main-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hm-hero-main-card:hover img {
+  transform: scale(1.05);
+}
+
+.hm-hero-content {
+  position: absolute;
+  top: 50%;
+  left: 8%;
+  transform: translateY(-50%);
+  max-width: 500px;
+  z-index: 2;
+}
+
+.hm-hero-content h3 {
+  font-size: 1.1rem;
+  color: var(--hm-accent);
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+
+.hm-hero-content h1 {
+  font-size: 3.2rem;
+  line-height: 1.1;
+  margin-bottom: 1.2rem;
+  color: #1a1a1a;
+}
+
+.hm-hero-content p {
+  font-size: 1.1rem;
+  color: #444;
+  margin-bottom: 2rem;
+}
+
+/* Overlay gradient for text readability */
+.hm-hero-main-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0.8) 30%, rgba(255,255,255,0) 100%);
+  z-index: 1;
+}
+
+/* Side Banners Styling */
+.hm-hero-side-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.hm-hero-side-card {
+  position: relative;
+  flex: 1;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 8px 15px rgba(0,0,0,0.06);
+}
+
+.hm-hero-side-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s ease;
+}
+
+.hm-hero-side-card:hover img {
+  transform: scale(1.1);
+}
+
+.hm-hero-side-content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  padding: 1.5rem;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.hm-hero-side-content h4 {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  color: var(--hm-accent);
+  margin-bottom: 0.2rem;
+}
+
+.hm-hero-side-content h2 {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.hm-hero-side-content span {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #333;
+}
+
+/* Card Overlays */
+.hm-hero-side-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.5) 60%, rgba(255,255,255,0) 100%);
+  z-index: 1;
+}
+
+@media (max-width: 1024px) {
+  .hm-hero-grid-layout {
+    grid-template-columns: 1fr;
+    height: auto;
+  }
+  
+  .hm-hero-main-card {
+    height: 450px;
+  }
+  
+  .hm-hero-side-cards {
+    flex-direction: row;
+    height: 250px;
+  }
+  
+  .hm-hero-content h1 {
+    font-size: 2.2rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .hm-hero-side-cards {
+    flex-direction: column;
+    height: auto;
+    margin-top: 1rem;
+  }
+  
+  .hm-hero-side-card {
+    height: 180px;
+  }
+  
+  .hm-hero-main-card {
+    height: 380px;
+  }
+  
+  .hm-hero-content {
+    left: 8%;
+    max-width: 85%;
+  }
+
+  .hm-hero-content h1 {
+    font-size: 1.8rem;
+    margin-bottom: 0.8rem;
+  }
+
+  .hm-hero-content h3 {
+    font-size: 0.95rem;
+  }
+
+  .hm-hero-content p {
+    font-size: 0.9rem;
+    margin-bottom: 1.2rem;
+  }
+}
