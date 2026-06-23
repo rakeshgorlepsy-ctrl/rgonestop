@@ -2,25 +2,50 @@
 
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
+import Link from 'next/link';
 import './HeroBanner.css';
 
 const HeroBanner = () => {
-  const { banners } = useAuth();
+  const { banners, isLoading } = useAuth();
   const [currentSlide, setCurrentSlide] = useState(0);
 
-  // Auto sliding logic
+  const displayedBanners = banners || [];
+
+  // Auto-slide
   useEffect(() => {
-    if (!banners || banners.length === 0) return;
+    if (displayedBanners.length <= 1) return;
     const timer = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % banners.length);
+      setCurrentSlide((prev) => (prev + 1) % displayedBanners.length);
     }, 4000);
     return () => clearInterval(timer);
-  }, [banners]);
+  }, [displayedBanners.length]);
 
-  if (!banners || banners.length === 0) {
+  // Reset slide index when banners change
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setCurrentSlide(0);
+    }, 0);
+    return () => clearTimeout(timer);
+  }, [banners?.length]);
+
+  // Loading skeleton
+  if (isLoading) {
     return (
-      <section className="hero-section container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '300px', background: '#f1f5f9', borderRadius: 'var(--border-radius-lg)', color: '#94a3b8', fontStyle: 'italic', margin: '2rem auto' }}>
-        No banners active on homepage. Customize via Admin Panel.
+      <section className="hero-section container">
+        <div className="hero-skeleton-box">
+          <div className="hero-skeleton-shimmer" />
+        </div>
+      </section>
+    );
+  }
+
+  // No banners
+  if (displayedBanners.length === 0) {
+    return (
+      <section className="hero-section container">
+        <div className="hero-empty-box">
+          <span>No banners active. Add banners from the Admin Panel.</span>
+        </div>
       </section>
     );
   }
@@ -28,54 +53,81 @@ const HeroBanner = () => {
   return (
     <section className="hero-section container">
       <div className="hero-carousel-wrapper">
-        <div 
+        <div
           className="hero-grid-slider"
-          style={{ 
-            transform: `translateX(calc(-${currentSlide} * (33.333% + 0.5rem)))`,
+          style={{
+            transform: `translateX(-${currentSlide * 100}%)`,
             transition: 'transform 0.6s cubic-bezier(0.25, 1, 0.5, 1)'
           }}
         >
-          {banners.map((banner) => (
-            <div key={banner.id} className="hero-banner-card">
-              <div 
-                className="hero-background" 
-                style={{ backgroundImage: `url(${banner.background})` }}
-              ></div>
-              <div 
-                className="hero-overlay"
-                style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 65%)' }}
-              ></div>
-              
-              <div className="hero-content animate-fade-in">
-                <h2>{banner.title}</h2>
-                <p>{banner.subtitle}</p>
-                <button className="btn btn-primary">{banner.cta || 'Shop Now'}</button>
-              </div>
-            </div>
-          ))}
-          {/* Duplicating few items so it doesn't leave blank space at the end of the slide temporarily */}
-          {banners.slice(0, 3).map((banner, index) => (
-            <div key={`dup-${index}`} className="hero-banner-card">
-              <div 
-                className="hero-background" 
-                style={{ backgroundImage: `url(${banner.background})` }}
-              ></div>
-              <div 
-                className="hero-overlay"
-                style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 65%)' }}
-              ></div>
-              
-              <div className="hero-content">
-                <h2>{banner.title}</h2>
-                <p>{banner.subtitle}</p>
-                <button className="btn btn-primary">{banner.cta || 'Shop Now'}</button>
-              </div>
-            </div>
-          ))}
+          {displayedBanners.map((banner) => {
+            const isExternal = banner.link && (banner.link.startsWith('http://') || banner.link.startsWith('https://'));
+            if (isExternal) {
+              return (
+                <a
+                  href={banner.link}
+                  key={banner.id}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hero-banner-card"
+                  style={{ cursor: 'pointer', textDecoration: 'none' }}
+                >
+                  <div
+                    className="hero-background"
+                    style={{ backgroundImage: `url(${banner.background})` }}
+                  ></div>
+                  {/* Text overlay */}
+                  <div className="hero-banner-overlay">
+                    {banner.title && <h2 className="hero-banner-title">{banner.title}</h2>}
+                    {banner.subtitle && <p className="hero-banner-subtitle">{banner.subtitle}</p>}
+                    {banner.cta && (
+                      <span className="hero-banner-cta">{banner.cta} →</span>
+                    )}
+                  </div>
+                </a>
+              );
+            }
+            return (
+              <Link
+                href={banner.link || '#'}
+                key={banner.id}
+                className="hero-banner-card"
+                style={{ cursor: banner.link ? 'pointer' : 'default', textDecoration: 'none' }}
+              >
+                <div
+                  className="hero-background"
+                  style={{ backgroundImage: `url(${banner.background})` }}
+                ></div>
+                {/* Text overlay */}
+                <div className="hero-banner-overlay">
+                  {banner.title && <h2 className="hero-banner-title">{banner.title}</h2>}
+                  {banner.subtitle && <p className="hero-banner-subtitle">{banner.subtitle}</p>}
+                  {banner.cta && (
+                    <span className="hero-banner-cta">{banner.cta} →</span>
+                  )}
+                </div>
+              </Link>
+            );
+          })}
         </div>
+
+        {/* Dot indicators */}
+        {displayedBanners.length > 1 && (
+          <div className="hero-indicators">
+            {displayedBanners.map((_, idx) => (
+              <button
+                key={idx}
+                className={`hero-dot ${currentSlide === idx ? 'active' : ''}`}
+                onClick={() => setCurrentSlide(idx)}
+                aria-label={`Go to slide ${idx + 1}`}
+              ></button>
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );
 };
 
 export default HeroBanner;
+

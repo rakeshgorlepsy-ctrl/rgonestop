@@ -1,26 +1,14 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Search, ShoppingCart, User, MapPin, ChevronDown, Camera, LogOut } from 'lucide-react';
 import Link from 'next/link';
 import { useAuth } from '../../context/AuthContext';
 import './HMHeader.css';
 
 const HMHeader = () => {
-  const { user, setLoginModalOpen, logout } = useAuth();
-  const [activeCity, setActiveCity] = useState("Hyderabad");
-
-  // Read the globally selected city on load and update dynamically
-  useEffect(() => {
-    const handleStorageChange = () => {
-      setActiveCity(localStorage.getItem('rg_detected_city') || "Hyderabad");
-    };
-    handleStorageChange();
-    
-    // Add custom listener for location updates
-    window.addEventListener('storage', handleStorageChange);
-    return () => window.removeEventListener('storage', handleStorageChange);
-  }, []);
+  const { user, setLoginModalOpen, logout, currentCity } = useAuth();
+  const activeCity = currentCity || "Hyderabad";
 
   return (
     <header className="hm-header">

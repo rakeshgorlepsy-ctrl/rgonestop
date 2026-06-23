@@ -518,11 +518,13 @@
   background: white;
   border-radius: var(--border-radius-md);
   border: 1px solid #e2e8f0;
-  overflow: hidden;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .admin-table {
   width: 100%;
+  min-width: 1000px;
   border-collapse: collapse;
   text-align: left;
 }
@@ -1073,20 +1075,22 @@
   backdrop-filter: blur(8px);
   z-index: 1000;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
-  padding: 1rem;
+  padding: 1.5rem 1rem;
+  overflow-y: auto;
 }
 
 .ap-modal-container {
   width: 100%;
-  max-width: 500px;
+  max-width: 540px;
   border-radius: var(--border-radius-lg);
   border: 1px solid rgba(255, 255, 255, 0.4);
-  overflow: hidden;
+  overflow: visible;
   box-shadow: var(--shadow-lg), 0 30px 60px rgba(0,0,0,0.1);
   position: relative;
   animation: modalEnter 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  margin: auto;
 }
 
 .ap-modal-close {
@@ -1760,4 +1764,25 @@
   .admin-table th:nth-child(2), .admin-table td:nth-child(2) {
     display: none; /* collapse address column on smaller devices */
   }
+}
+
+/* Print Orders Status Badge Styling */
+.status-badge-pill.pending {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.status-badge-pill.printing {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.status-badge-pill.outfordelivery {
+  background: #fdf2f8;
+  color: #9d174d;
+}
+
+.status-badge-pill.delivered {
+  background: #dcfce7;
+  color: #166534;
 }

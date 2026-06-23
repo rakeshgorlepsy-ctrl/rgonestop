@@ -25,3 +25,7 @@ out/
 *.njsproj
 *.sln
 *.sw?
+
+# Temporary files
+scratch/
+Untitled-1.txt

@@ -1,5 +1,6 @@
 import '../index.css';
 import { AuthProvider } from '../context/AuthContext';
+import LoginModal from '../components/LoginModal';
 
 export const metadata = {
   title: 'RG OneStop - Customized Gifts & Printing Services',
@@ -15,8 +16,10 @@ export default function RootLayout({ children }) {
       <body suppressHydrationWarning>
         <AuthProvider>
           {children}
+          <LoginModal />
         </AuthProvider>
       </body>
     </html>
   );
 }
+

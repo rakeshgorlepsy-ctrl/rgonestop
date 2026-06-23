@@ -1,10 +1,11 @@
 "use client";
 
-import React, { useEffect } from 'react';
+import React, { useEffect, Suspense } from 'react';
 import Header from '../components/Header';
 import HeroBanner from '../components/HeroBanner';
 import Categories from '../components/Categories';
 import ServiceCategories from '../components/ServiceCategories';
+import BrandingPartners from '../components/BrandingPartners';
 import Footer from '../components/Footer';
 import FloatingWhatsApp from '../components/FloatingWhatsApp';
 import HMMobileNav from '../components/hm/HMMobileNav';
@@ -23,7 +24,10 @@ const HomePage = () => {
         <div id="categories">
           <Categories />
         </div>
-        <ServiceCategories />
+        <BrandingPartners />
+        <Suspense fallback={null}>
+          <ServiceCategories />
+        </Suspense>
       </main>
       <Footer />
       <FloatingWhatsApp hideOnMobile={true} />

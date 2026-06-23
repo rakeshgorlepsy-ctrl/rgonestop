@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from 'react';
-import { MapPin, Search, User, Briefcase, ChevronDown, Loader2, LogOut, Check, Sparkles } from 'lucide-react';
+import { MapPin, Search, User, Briefcase, ChevronDown, Loader2, LogOut, Check, Sparkles, X, Bell } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from '../context/AuthContext';
@@ -36,7 +36,7 @@ const INDIAN_CITIES = [
 const POPULAR_CITIES = ["Hyderabad", "Guntur", "Vijayawada", "Visakhapatnam", "Nellore"];
 
 const SEARCH_SUGGESTIONS = [
-  { name: "Master Xerox", type: "Category", path: "/" },
+  { name: "Master Xerox", type: "Category", path: "/master-xerox" },
   { name: "Hashtag Memories", type: "Category", path: "/hashtag-memories" },
   { name: "Acrylic Photo Frame", type: "Product", path: "/hashtag-memories" },
   { name: "Photo Chocolate Box", type: "Product", path: "/hashtag-memories" },
@@ -56,8 +56,29 @@ const Header = () => {
     setLoginModalOpen, 
     setAddBusinessModalOpen,
     currentCity,
-    changeCity
+    changeCity,
+    logo,
+    notifications,
+    markNotificationAsRead
   } = useAuth();
+
+  // Notification States
+  const [isNotificationOpen, setIsNotificationOpen] = useState(false);
+  const notificationRef = useRef(null);
+
+  const userNotifications = (notifications || []).filter(n => user && n.userEmail === user.email);
+  const unreadCount = userNotifications.filter(n => !n.read).length;
+
+  const handleMarkAllAsRead = async () => {
+    const unread = userNotifications.filter(n => !n.read);
+    for (let notif of unread) {
+      try {
+        await markNotificationAsRead(notif.id);
+      } catch (err) {
+        console.error("Failed to mark notification as read:", err);
+      }
+    }
+  };
 
   // Location States
   const [isDetecting, setIsDetecting] = useState(false);
@@ -83,6 +104,20 @@ const Header = () => {
   const searchContainerRef = useRef(null);
   const userDropdownRef = useRef(null);
 
+  // IP Geolocation fallback
+  const detectLocationByIP = async () => {
+    try {
+      const response = await fetch("https://ipapi.co/json/");
+      const data = await response.json();
+      if (data && data.city) {
+        return data.city;
+      }
+    } catch (e) {
+      console.error("IP geolocation failed:", e);
+    }
+    return "Hyderabad";
+  };
+
   // Geolocation detector
   const detectLocation = () => {
     setIsDetecting(true);
@@ -96,25 +131,34 @@ const Header = () => {
             const response = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`);
             const data = await response.json();
             
-            const city = data.city || data.locality || data.principalSubdivision || "Hyderabad";
-            changeCity(city);
+            const city = data.city || data.locality || data.principalSubdivision;
+            if (city) {
+              changeCity(city);
+            } else {
+              const ipCity = await detectLocationByIP();
+              changeCity(ipCity);
+            }
           } catch (error) {
-            console.error("Location reverse-geocode failed, using fallback:", error);
-            changeCity("Hyderabad");
+            console.error("Location reverse-geocode failed, using IP fallback:", error);
+            const ipCity = await detectLocationByIP();
+            changeCity(ipCity);
           } finally {
             setIsDetecting(false);
           }
         },
-        (error) => {
-          console.warn("Geolocation permission denied, using default:", error);
-          changeCity("Hyderabad");
+        async (error) => {
+          console.warn("Geolocation permission denied, using IP fallback:", error);
+          const ipCity = await detectLocationByIP();
+          changeCity(ipCity);
           setIsDetecting(false);
         },
         { timeout: 6000 }
       );
     } else {
-      changeCity("Hyderabad");
-      setIsDetecting(false);
+      detectLocationByIP().then(ipCity => {
+        changeCity(ipCity);
+        setIsDetecting(false);
+      });
     }
   };
 
@@ -136,6 +180,9 @@ const Header = () => {
       }
       if (userDropdownRef.current && !userDropdownRef.current.contains(e.target)) {
         setIsUserDropdownOpen(false);
+      }
+      if (notificationRef.current && !notificationRef.current.contains(e.target)) {
+        setIsNotificationOpen(false);
       }
     };
     document.addEventListener('mousedown', handleOutsideClick);
@@ -209,7 +256,7 @@ const Header = () => {
           
           {/* Left: Logo */}
           <Link href="/" className="header-logo">
-            <img src="/assets/logo.png" alt="RG OneStop" className="logo-image" />
+            <img src={logo} alt="RG OneStop" className="logo-image" />
           </Link>
 
           {/* Location Selector (with automated cache + manual override dropdown) */}
@@ -338,6 +385,109 @@ const Header = () => {
 
           {/* Right: Actions */}
           <div className="header-actions">
+            {isMounted && user && (
+              <div className="notification-bell-wrapper" ref={notificationRef} style={{ position: 'relative' }}>
+                <button 
+                  className="action-btn bell-btn" 
+                  onClick={() => setIsNotificationOpen(!isNotificationOpen)}
+                  title="View notifications"
+                  style={{ 
+                    position: 'relative', padding: '10px', borderRadius: '50%', 
+                    background: 'rgba(0,0,0,0.03)', border: 'none', cursor: 'pointer', 
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    color: 'var(--text-dark)'
+                  }}
+                >
+                  <Bell size={20} />
+                  {unreadCount > 0 && (
+                    <span 
+                      className="bell-badge"
+                      style={{
+                        position: 'absolute', top: '2px', right: '2px',
+                        background: '#ef4444', color: 'white', fontSize: '9px',
+                        fontWeight: 700, borderRadius: '50%', minWidth: '15px',
+                        height: '15px', display: 'flex', alignItems: 'center',
+                        justifyContent: 'center', padding: '0 2px'
+                      }}
+                    >
+                      {unreadCount}
+                    </span>
+                  )}
+                </button>
+
+                {isNotificationOpen && (
+                  <div 
+                    className="notifications-dropdown-card glass animate-fade-in"
+                    style={{
+                      position: 'absolute', top: '100%', right: 0, marginTop: '8px',
+                      width: '320px', background: 'rgba(255, 255, 255, 0.98)',
+                      border: '1px solid rgba(0,0,0,0.1)', borderRadius: '16px',
+                      boxShadow: '0 10px 25px rgba(0,0,0,0.08)', padding: '1rem',
+                      zIndex: 1000, display: 'flex', flexDirection: 'column', gap: '0.75rem',
+                      color: '#1e293b'
+                    }}
+                  >
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <h4 style={{ margin: 0, fontSize: '0.9rem', fontWeight: 800 }}>Notifications</h4>
+                      {unreadCount > 0 && (
+                        <button 
+                          onClick={handleMarkAllAsRead}
+                          style={{ border: 'none', background: 'none', color: '#2faf9e', fontSize: '0.75rem', fontWeight: 600, cursor: 'pointer', padding: 0 }}
+                        >
+                          Mark all read
+                        </button>
+                      )}
+                    </div>
+                    
+                    <div style={{ height: '1px', background: 'rgba(0,0,0,0.06)', margin: 0 }}></div>
+                    
+                    <div 
+                      className="notifications-list" 
+                      style={{ 
+                        maxHeight: '240px', overflowY: 'auto', display: 'flex', 
+                        flexDirection: 'column', gap: '8px', paddingRight: '4px' 
+                      }}
+                    >
+                      {userNotifications.length === 0 ? (
+                        <p style={{ textAlign: 'center', fontSize: '0.8rem', color: '#64748b', margin: '1rem 0' }}>No notifications yet.</p>
+                      ) : (
+                        userNotifications.map((notif) => (
+                          <div 
+                            key={notif.id} 
+                            style={{ 
+                              padding: '8px 10px', borderRadius: '8px', 
+                              background: notif.read ? 'transparent' : 'rgba(47, 175, 158, 0.05)',
+                              borderLeft: notif.read ? '3px solid transparent' : '3px solid #2faf9e',
+                              fontSize: '0.8rem', position: 'relative',
+                              display: 'flex', flexDirection: 'column', gap: '2px',
+                              textAlign: 'left'
+                            }}
+                          >
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '8px' }}>
+                              <span style={{ fontWeight: notif.read ? 600 : 700, color: '#1e293b' }}>{notif.title}</span>
+                              {!notif.read && (
+                                <button 
+                                  onClick={() => markNotificationAsRead(notif.id)}
+                                  style={{ border: 'none', background: 'none', color: '#2faf9e', cursor: 'pointer', fontSize: '0.75rem', fontWeight: 'bold', padding: '0 2px' }}
+                                  title="Mark as read"
+                                >
+                                  ✓
+                                </button>
+                              )}
+                            </div>
+                            <span style={{ color: '#475569', fontSize: '0.75rem', lineHeight: '1.3' }}>{notif.message}</span>
+                            <span style={{ color: '#94a3b8', fontSize: '0.65rem', marginTop: '2px' }}>
+                              {notif.createdAt ? new Date(notif.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : ''}
+                            </span>
+                          </div>
+                        ))
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+
             {isMounted && user ? (
               /* If logged in, show user account dropdown */
               <div className="user-dropdown-wrapper" ref={userDropdownRef}>
@@ -364,18 +514,35 @@ const Header = () => {
                     
                     <div className="user-menu-listings-section">
                       <h5>My Registered Businesses</h5>
-                      {businesses.length === 0 ? (
-                        <p className="no-businesses-hint">No listings created yet.</p>
-                      ) : (
-                        <div className="user-menu-listings-scroll">
-                          {businesses.map((b) => (
-                            <div key={b.id} className="menu-business-item">
-                              <span className="b-name">{b.businessName}</span>
-                              <span className="b-city">{b.city}</span>
-                            </div>
-                          ))}
-                        </div>
-                      )}
+                      {(() => {
+                        const myBusinesses = (businesses || []).filter(
+                          (b) => user && (b.ownerEmail === user.email || b.userEmail === user.email)
+                        );
+                        return myBusinesses.length === 0 ? (
+                          <p className="no-businesses-hint">No listings created yet.</p>
+                        ) : (
+                          <div className="user-menu-listings-scroll">
+                            {myBusinesses.map((b) => (
+                              <div key={b.id} className="menu-business-item" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.4rem 0.75rem', borderRadius: '6px', background: 'rgba(0,0,0,0.02)', marginBottom: '0.35rem' }}>
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', textAlign: 'left' }}>
+                                  <span className="b-name" style={{ fontWeight: '600', color: '#1e293b', fontSize: '0.85rem' }}>{b.businessName}</span>
+                                  <span className="b-city" style={{ color: '#64748b', fontSize: '0.72rem' }}>{b.city}</span>
+                                </div>
+                                <span style={{
+                                  fontSize: '0.65rem',
+                                  fontWeight: '700',
+                                  padding: '2px 6px',
+                                  borderRadius: '4px',
+                                  background: b.verified ? '#dcfce7' : '#fef3c7',
+                                  color: b.verified ? '#15803d' : '#b45309'
+                                }}>
+                                  {b.verified ? 'Approved' : 'Pending'}
+                                </span>
+                              </div>
+                            ))}
+                          </div>
+                        );
+                      })()}
                     </div>
 
                     <div className="dropdown-divider"></div>
@@ -404,7 +571,6 @@ const Header = () => {
       </header>
 
       {/* Global Mounted Dialogs */}
-      <LoginModal />
       <AddBusinessModal />
     </>
   );

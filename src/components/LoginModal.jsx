@@ -1,25 +1,40 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { X, Loader2 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import './LoginModal.css';
 
 const LoginModal = () => {
-  const { isLoginModalOpen, setLoginModalOpen, loginWithGoogle } = useAuth();
+  const { user, isLoginModalOpen, setLoginModalOpen, loginWithGoogle } = useAuth();
   const [isAuthenticating, setIsAuthenticating] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
-  if (!isLoginModalOpen) return null;
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setMounted(true);
+    }, 0);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (!mounted) return null;
+
+  // If there's no user, force open the modal to block the page
+  const shouldShow = !user || isLoginModalOpen;
+
+  if (!shouldShow) return null;
 
   const handleBackdropClick = (e) => {
-    if (e.target.className === 'login-backdrop') {
+    if (user && e.target.className === 'login-backdrop') {
       handleClose();
     }
   };
 
   const handleClose = () => {
-    setIsAuthenticating(false);
-    setLoginModalOpen(false);
+    if (user) {
+      setIsAuthenticating(false);
+      setLoginModalOpen(false);
+    }
   };
 
   const handleRealGoogleLogin = async () => {
@@ -36,9 +51,11 @@ const LoginModal = () => {
   return (
     <div className="login-backdrop" onClick={handleBackdropClick}>
       <div className="login-modal-container glass animate-fade-in">
-        <button className="login-close-btn" onClick={handleClose} aria-label="Close modal">
-          <X size={20} />
-        </button>
+        {user && (
+          <button className="login-close-btn" onClick={handleClose} aria-label="Close modal">
+            <X size={20} />
+          </button>
+        )}
 
         {isAuthenticating ? (
           <div className="google-chooser-box">

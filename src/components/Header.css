@@ -510,7 +510,11 @@
   }
 
   .header-location-wrapper {
-    flex: 0 0 auto;
+    order: -1; /* Move above the logo row */
+    flex: 1 1 100%; /* Take full width at the very top */
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    padding-bottom: 0.4rem;
+    margin-bottom: 0.2rem;
   }
 
   .header-location {
@@ -548,10 +552,10 @@
 
 @media (max-width: 480px) {
   .header-container {
-    gap: 0.8rem;
+    gap: 0.5rem;
   }
   .header-location-wrapper {
-    display: none; /* Only hide on extremely small phones if space is totally gone */
+    display: block; /* Keep location visible on extremely small screens */
   }
 }
 

@@ -10,164 +10,21 @@ import {
   addDoc, 
   updateDoc, 
   deleteDoc, 
-  doc, 
-  getDocs, 
-  setDoc 
+  doc,
+  setDoc,
+  getDoc
 } from "firebase/firestore";
 
 const AuthContext = createContext();
 
-const INITIAL_PRODUCTS = [
-  {
-    id: "p1",
-    name: 'Acrylic Photo Frame',
-    price: '₹499',
-    originalPrice: '₹799',
-    image: '/products/acrylic_frame.png',
-    category: 'Hashtag Memories & Gifts'
-  },
-  {
-    id: "p2",
-    name: 'Photo Chocolate Box',
-    price: '₹599',
-    originalPrice: '₹899',
-    image: '/products/chocolate.png',
-    category: 'Hashtag Memories & Gifts'
-  },
-  {
-    id: "p3",
-    name: 'Polaroid Photo Set',
-    price: '₹299',
-    originalPrice: '₹499',
-    image: '/products/polaroid.png',
-    category: 'Hashtag Memories & Gifts'
-  },
-  {
-    id: "p4",
-    name: 'Custom Keychain',
-    price: '₹199',
-    originalPrice: '₹299',
-    image: '/products/keychain.png',
-    category: 'Hashtag Memories & Gifts'
-  }
-];
+const INITIAL_PRODUCTS = [];
+const INITIAL_BUSINESSES = [];
+const INITIAL_BANNERS = [];
+const INITIAL_CATEGORIES = [];
+const INITIAL_SERVICE_CATEGORIES = [];
+const INITIAL_PRINT_ORDERS = [];
+const INITIAL_BRANDING_PARTNERS = [];
 
-const INITIAL_BUSINESSES = [
-  {
-    id: "b1",
-    businessName: "RG Xerox & Digital Printers",
-    category: "Master Xerox & Printing",
-    description: "Premium high-speed black & white xerox, multi-color digital prints, project bindings, and academic material printing at student-friendly rates.",
-    city: "Hyderabad",
-    address: "Shop 4, Campus Arcade, opposite PG Gate, Hyderabad",
-    contactNumber: "9123456789",
-    whatsappNumber: "9123456789",
-    timings: "9:00 AM - 9:30 PM",
-    verified: true,
-    logo: null,
-    photos: []
-  },
-  {
-    id: "b2",
-    businessName: "Shine Premium Gift Palace",
-    category: "Hashtag Memories & Gifts",
-    description: "Custom photo frames, acrylic stands, personalized magic mugs, design albums, and customized premium anniversary chocolate gifts.",
-    city: "Visakhapatnam",
-    address: "Road No. 2, Beach View Complex, Vizag",
-    contactNumber: "8885551234",
-    whatsappNumber: "8885551234",
-    timings: "10:00 AM - 9:00 PM",
-    verified: true,
-    logo: null,
-    photos: []
-  }
-];
-
-const INITIAL_BANNERS = [
-  {
-    id: "1",
-    title: 'Personalized Gifts',
-    subtitle: 'Premium photo products.',
-    cta: 'Shop Now',
-    background: 'https://images.unsplash.com/photo-1549465220-1a8b9238cd48?q=80&w=800&auto=format&fit=crop'
-  },
-  {
-    id: "2",
-    title: 'Photo Chocolates',
-    subtitle: 'Delicious handcrafted chocolates.',
-    cta: 'Order Now',
-    background: 'https://images.unsplash.com/photo-1548883354-94bcfe321cbb?q=80&w=800&auto=format&fit=crop'
-  },
-  {
-    id: "3",
-    title: 'Magnets & Badges',
-    subtitle: 'High-quality printing.',
-    cta: 'Shop Designs',
-    background: 'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?q=80&w=800&auto=format&fit=crop'
-  },
-  {
-    id: "4",
-    title: 'Custom Mugs',
-    subtitle: 'Start your day right.',
-    cta: 'Create Mug',
-    background: 'https://images.unsplash.com/photo-1514228742587-6b1558fcca3d?q=80&w=800&auto=format&fit=crop'
-  },
-  {
-    id: "5",
-    title: 'Printed T-Shirts',
-    subtitle: 'Wear your memories.',
-    cta: 'Customize Tees',
-    background: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=800&auto=format&fit=crop'
-  },
-  {
-    id: "6",
-    title: 'Elegant Photo Frames',
-    subtitle: 'Capture the moment forever.',
-    cta: 'Shop Frames',
-    background: 'https://images.unsplash.com/photo-1577083165213-9f5e135aa6d5?q=80&w=800&auto=format&fit=crop'
-  },
-  {
-    id: "7",
-    title: 'Printed Tote Bags',
-    subtitle: 'Eco-friendly and stylish.',
-    cta: 'Design Yours',
-    background: 'https://images.unsplash.com/photo-1597484661643-2f5fef640dd1?q=80&w=800&auto=format&fit=crop'
-  },
-  {
-    id: "8",
-    title: 'Personalized Notebooks',
-    subtitle: 'Pen down your thoughts.',
-    cta: 'Explore Notes',
-    background: 'https://images.unsplash.com/photo-1531346878377-a541e4a113fb?q=80&w=800&auto=format&fit=crop'
-  },
-  {
-    id: "9",
-    title: 'Custom Keychains',
-    subtitle: 'Carry loved ones everywhere.',
-    cta: 'Shop Accessories',
-    background: 'https://images.unsplash.com/photo-1611080340332-9cb77353f47e?q=80&w=800&auto=format&fit=crop'
-  }
-];
-
-const INITIAL_CATEGORIES = [
-  { id: "1", name: 'Master Xerox', image: '/categories/xerox.png', color: '#1F3A8A', path: '/' },
-  { id: "2", name: 'Hashtag Memories', image: '/categories/hashtag-memories.png', color: '#2FAF9E', path: '/hashtag-memories' }
-];
-
-const INITIAL_SERVICE_CATEGORIES = [
-  { id: "s1", title: 'Hospitals & Clinics', emoji: '🏥' },
-  { id: "s2", title: 'Govt & Emergency', emoji: '🏛️' },
-  { id: "s3", title: 'Education', emoji: '📚' },
-  { id: "s4", title: 'Coaching Centers', emoji: '🏫' },
-  { id: "s5", title: 'Shops & Stores', emoji: '🛍️' },
-  { id: "s6", title: 'Restaurants', emoji: '🍽️' },
-  { id: "s7", title: 'Rjy Famous', emoji: '⭐' },
-  { id: "s8", title: 'Hotels', emoji: '🏡' },
-  { id: "s9", title: 'Entertainment', emoji: '🎬' },
-  { id: "s10", title: 'Function Halls', emoji: '🏢' },
-  { id: "s11", title: 'Studios', emoji: '📸' },
-  { id: "s12", title: 'Public Transport Hub', emoji: '🚂' }
-];
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(() => {
@@ -188,9 +45,16 @@ export const AuthProvider = ({ children }) => {
   const [banners, setBanners] = useState([]);
   const [categories, setCategories] = useState([]);
   const [serviceCategories, setServiceCategories] = useState([]);
+  const [printOrders, setPrintOrders] = useState([]);
+  const [hashtagOrders, setHashtagOrders] = useState([]);
+  const [notifications, setNotifications] = useState([]);
+  const [paymentConfig, setPaymentConfig] = useState({ qrCode: '', upiId: '', payeeName: '' });
   const [isLoginModalOpen, setLoginModalOpen] = useState(false);
   const [isAddBusinessModalOpen, setAddBusinessModalOpen] = useState(false);
   const [currentCity, setCurrentCity] = useState("Hyderabad");
+  const [logo, setLogo] = useState('/assets/logo.png');
+  const [brandingPartners, setBrandingPartners] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -211,72 +75,99 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Helper function to seed initial data if collections are empty in Firestore
-  const seedCollectionIfEmpty = async (collectionName, initialData) => {
-    try {
-      const colRef = collection(db, collectionName);
-      const snapshot = await getDocs(colRef);
-      if (snapshot.empty) {
-        console.log(`[Firebase] Seeding empty collection: ${collectionName}`);
-        for (const item of initialData) {
-          const { id, ...itemData } = item;
-          // Set with original id to maintain consistency
-          await setDoc(doc(db, collectionName, id), {
-            ...itemData,
-            createdAt: new Date().toISOString()
-          });
-        }
-      }
-    } catch (err) {
-      console.error(`Failed to seed collection "${collectionName}":`, err);
-    }
-  };
-
-  // 1. First-time DB initialization (Seeding)
-  useEffect(() => {
-    const initDatabase = async () => {
-      await seedCollectionIfEmpty("products", INITIAL_PRODUCTS);
-      await seedCollectionIfEmpty("businesses", INITIAL_BUSINESSES);
-      await seedCollectionIfEmpty("banners", INITIAL_BANNERS);
-      await seedCollectionIfEmpty("categories", INITIAL_CATEGORIES);
-      await seedCollectionIfEmpty("service_categories", INITIAL_SERVICE_CATEGORIES);
-    };
-    initDatabase();
-  }, []);
+  // DB seeding removed — data managed entirely via Firestore in real-time
 
   // 2. Real-time Listeners for Syncing Firestore collections
   useEffect(() => {
+    let loadedCount = 0;
+    const TOTAL_LISTENERS = 8; // products, businesses, banners, categories, serviceCategories, printOrders, hashtagOrders, logo
+    const markLoaded = () => {
+      loadedCount++;
+      if (loadedCount >= TOTAL_LISTENERS) setIsLoading(false);
+    };
+
     // Sync Products
     const unsubscribeProducts = onSnapshot(collection(db, "products"), (snapshot) => {
       const list = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       setProducts(list);
-    }, (error) => console.error("Error listening to products collection:", error));
+      markLoaded();
+    }, (error) => { console.error("Error listening to products collection:", error); markLoaded(); });
 
     // Sync Businesses
     const unsubscribeBusinesses = onSnapshot(collection(db, "businesses"), (snapshot) => {
       const list = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       setBusinesses(list);
-    }, (error) => console.error("Error listening to businesses collection:", error));
+      markLoaded();
+    }, (error) => { console.error("Error listening to businesses collection:", error); markLoaded(); });
 
     // Sync Banners
     const unsubscribeBanners = onSnapshot(collection(db, "banners"), (snapshot) => {
       const list = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       setBanners(list);
-    }, (error) => console.error("Error listening to banners collection:", error));
+      markLoaded();
+    }, (error) => { console.error("Error listening to banners collection:", error); markLoaded(); });
 
     // Sync Categories
     const unsubscribeCategories = onSnapshot(collection(db, "categories"), (snapshot) => {
       const list = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       setCategories(list);
-    }, (error) => console.error("Error listening to categories collection:", error));
+      markLoaded();
+    }, (error) => { console.error("Error listening to categories collection:", error); markLoaded(); });
 
     // Sync Service Categories
     const unsubscribeServiceCategories = onSnapshot(collection(db, "service_categories"), (snapshot) => {
       const list = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      // Sort to maintain layout consistency if needed
       list.sort((a, b) => (a.id || '').localeCompare(b.id || ''));
       setServiceCategories(list);
-    }, (error) => console.error("Error listening to service_categories collection:", error));
+      markLoaded();
+    }, (error) => { console.error("Error listening to service_categories collection:", error); markLoaded(); });    // Sync Print Orders
+    const unsubscribePrintOrders = onSnapshot(collection(db, "print_orders"), (snapshot) => {
+      const list = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      list.sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
+      setPrintOrders(list);
+      markLoaded();
+    }, (error) => { console.error("Error listening to print_orders collection:", error); markLoaded(); });
+
+    // Sync Hashtag Orders
+    const unsubscribeHashtagOrders = onSnapshot(collection(db, "hashtag_orders"), (snapshot) => {
+      const list = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      list.sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
+      setHashtagOrders(list);
+      markLoaded();
+    }, (error) => { console.error("Error listening to hashtag_orders collection:", error); markLoaded(); });
+
+    // Sync Logo Config
+    const unsubscribeLogo = onSnapshot(doc(db, "settings", "logoConfig"), (docSnap) => {
+      if (docSnap.exists() && docSnap.data().logo) {
+        setLogo(docSnap.data().logo);
+      } else {
+        setLogo('/assets/logo.png');
+      }
+      markLoaded();
+    }, (error) => { console.error("Error listening to settings/logoConfig:", error); markLoaded(); });
+
+    // Sync Branding Partners (not counted in TOTAL_LISTENERS — bonus load)
+    const unsubscribeBrandingPartners = onSnapshot(collection(db, "branding_partners"), (snapshot) => {
+      const list = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      list.sort((a, b) => (a.createdAt || '').localeCompare(b.createdAt || ''));
+      setBrandingPartners(list);
+    }, (error) => console.error("Error listening to branding_partners collection:", error));
+
+    // Sync Notifications (bonus load)
+    const unsubscribeNotifications = onSnapshot(collection(db, "notifications"), (snapshot) => {
+      const list = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      list.sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
+      setNotifications(list);
+    }, (error) => console.error("Error listening to notifications collection:", error));
+
+    // Sync Payment Config (bonus load)
+    const unsubscribePaymentConfig = onSnapshot(doc(db, "settings", "paymentConfig"), (docSnap) => {
+      if (docSnap.exists()) {
+        setPaymentConfig(docSnap.data());
+      } else {
+        setPaymentConfig({ qrCode: '', upiId: '', payeeName: '' });
+      }
+    }, (error) => console.error("Error listening to settings/paymentConfig:", error));
 
     return () => {
       unsubscribeProducts();
@@ -284,6 +175,12 @@ export const AuthProvider = ({ children }) => {
       unsubscribeBanners();
       unsubscribeCategories();
       unsubscribeServiceCategories();
+      unsubscribePrintOrders();
+      unsubscribeHashtagOrders();
+      unsubscribeLogo();
+      unsubscribeBrandingPartners();
+      unsubscribeNotifications();
+      unsubscribePaymentConfig();
     };
   }, []);
 
@@ -302,11 +199,42 @@ export const AuthProvider = ({ children }) => {
       const provider = new GoogleAuthProvider();
       try {
         const result = await signInWithPopup(auth, provider);
-        const realUser = {
+        const uid = result.user.uid;
+
+        // Base user profile
+        const baseProfile = {
+          uid,
           name: result.user.displayName,
           email: result.user.email,
           avatar: result.user.photoURL || `https://api.dicebear.com/7.x/adventurer/svg?seed=${result.user.displayName}`,
+          createdAt: new Date().toISOString(),
         };
+
+        // Write to Firestore (merge: true keeps existing role/fields intact)
+        try {
+          await setDoc(doc(db, "users", uid), baseProfile, { merge: true });
+          console.log("✅ User profile synced to Firestore:", result.user.email);
+        } catch (firestoreError) {
+          console.error("⚠️ Firestore users write failed (check rules):", firestoreError);
+        }
+
+        // Fetch full user document (includes role set manually in Firestore)
+        let role = null;
+        try {
+          const userSnap = await getDoc(doc(db, "users", uid));
+          if (userSnap.exists()) {
+            role = userSnap.data().role || null;
+            console.log("🔑 Fetched role from Firestore:", role);
+          } else {
+            console.warn("⚠️ User document not found in Firestore for uid:", uid);
+          }
+        } catch (fetchError) {
+          console.error("⚠️ Failed to fetch user role from Firestore:", fetchError);
+        }
+
+        const realUser = { ...baseProfile, role };
+        console.log("👤 Final user object:", realUser);
+
         setUser(realUser);
         localStorage.setItem('rg_user', JSON.stringify(realUser));
         setLoginModalOpen(false);
@@ -500,6 +428,185 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const addPrintOrder = async (orderData) => {
+    try {
+      const newOrder = {
+        ...orderData,
+        createdAt: new Date().toISOString(),
+        status: 'Pending'
+      };
+      const docRef = await addDoc(collection(db, "print_orders"), newOrder);
+      return { id: docRef.id, ...newOrder };
+    } catch (error) {
+      console.error("Error adding print order to Firestore:", error);
+      throw error;
+    }
+  };
+
+  const updatePrintOrderStatus = async (id, newStatus) => {
+    try {
+      const docRef = doc(db, "print_orders", id);
+      await updateDoc(docRef, { status: newStatus });
+    } catch (error) {
+      console.error("Error updating print order status in Firestore:", error);
+      throw error;
+    }
+  };
+
+  const deletePrintOrder = async (id) => {
+    try {
+      await deleteDoc(doc(db, "print_orders", id));
+    } catch (error) {
+      console.error("Error deleting print order from Firestore:", error);
+      throw error;
+    }
+  };
+
+  const addHashtagOrder = async (orderData) => {
+    try {
+      const newOrder = {
+        ...orderData,
+        createdAt: new Date().toISOString(),
+        status: 'Pending'
+      };
+      const docRef = await addDoc(collection(db, "hashtag_orders"), newOrder);
+      return { id: docRef.id, ...newOrder };
+    } catch (error) {
+      console.error("Error adding hashtag order to Firestore:", error);
+      throw error;
+    }
+  };
+
+  const updateHashtagOrderStatus = async (id, newStatus) => {
+    try {
+      const docRef = doc(db, "hashtag_orders", id);
+      await updateDoc(docRef, { status: newStatus });
+    } catch (error) {
+      console.error("Error updating hashtag order status in Firestore:", error);
+      throw error;
+    }
+  };
+
+  const deleteHashtagOrder = async (id) => {
+    try {
+      await deleteDoc(doc(db, "hashtag_orders", id));
+    } catch (error) {
+      console.error("Error deleting hashtag order from Firestore:", error);
+      throw error;
+    }
+  };
+
+  const updateLogo = async (logoData) => {
+    try {
+      await setDoc(doc(db, "settings", "logoConfig"), {
+        logo: logoData,
+        updatedAt: new Date().toISOString()
+      });
+    } catch (error) {
+      console.error("Error updating logo in settings/logoConfig:", error);
+      throw error;
+    }
+  };
+
+  const addBrandingPartner = async (partnerData) => {
+    try {
+      const newPartner = {
+        ...partnerData,
+        createdAt: new Date().toISOString()
+      };
+      const docRef = await addDoc(collection(db, "branding_partners"), newPartner);
+      return { id: docRef.id, ...newPartner };
+    } catch (error) {
+      console.error("Error adding branding partner to Firestore:", error);
+      throw error;
+    }
+  };
+
+  const updateBrandingPartner = async (id, updatedFields) => {
+    try {
+      const docRef = doc(db, "branding_partners", id);
+      await updateDoc(docRef, updatedFields);
+    } catch (error) {
+      console.error("Error updating branding partner in Firestore:", error);
+      throw error;
+    }
+  };
+
+  const deleteBrandingPartner = async (id) => {
+    try {
+      await deleteDoc(doc(db, "branding_partners", id));
+    } catch (error) {
+      console.error("Error deleting branding partner from Firestore:", error);
+      throw error;
+    }
+  };
+
+  // --- Notifications operations ---
+  const addNotification = async (notificationData) => {
+    try {
+      const newNotification = {
+        ...notificationData,
+        createdAt: new Date().toISOString(),
+        read: false
+      };
+      const docRef = await addDoc(collection(db, "notifications"), newNotification);
+      return { id: docRef.id, ...newNotification };
+    } catch (error) {
+      console.error("Error adding notification to Firestore:", error);
+      throw error;
+    }
+  };
+
+  const markNotificationAsRead = async (id) => {
+    try {
+      const docRef = doc(db, "notifications", id);
+      await updateDoc(docRef, { read: true });
+    } catch (error) {
+      console.error("Error marking notification as read:", error);
+      throw error;
+    }
+  };
+
+  const deleteNotification = async (id) => {
+    try {
+      await deleteDoc(doc(db, "notifications", id));
+    } catch (error) {
+      console.error("Error deleting notification:", error);
+      throw error;
+    }
+  };
+
+  // --- Payment Config operations ---
+  const updatePaymentConfig = async (config) => {
+    try {
+      await setDoc(doc(db, "settings", "paymentConfig"), config, { merge: true });
+    } catch (error) {
+      console.error("Error updating payment config in settings/paymentConfig:", error);
+      throw error;
+    }
+  };
+
+  // --- Generic Order Updates ---
+  const updatePrintOrder = async (id, updatedFields) => {
+    try {
+      const docRef = doc(db, "print_orders", id);
+      await updateDoc(docRef, updatedFields);
+    } catch (error) {
+      console.error("Error updating print order in Firestore:", error);
+      throw error;
+    }
+  };
+
+  const updateHashtagOrder = async (id, updatedFields) => {
+    try {
+      const docRef = doc(db, "hashtag_orders", id);
+      await updateDoc(docRef, updatedFields);
+    } catch (error) {
+      console.error("Error updating hashtag order in Firestore:", error);
+      throw error;
+    }
+  };
+
   return (
     <AuthContext.Provider value={{
       user,
@@ -508,6 +615,7 @@ export const AuthProvider = ({ children }) => {
       banners,
       categories,
       serviceCategories,
+      isLoading,
       loginWithGoogle,
       logout,
       addBusiness,
@@ -530,7 +638,29 @@ export const AuthProvider = ({ children }) => {
       isAddBusinessModalOpen,
       setAddBusinessModalOpen,
       currentCity,
-      changeCity
+      changeCity,
+      printOrders,
+      addPrintOrder,
+      updatePrintOrderStatus,
+      updatePrintOrder,
+      deletePrintOrder,
+      hashtagOrders,
+      addHashtagOrder,
+      updateHashtagOrderStatus,
+      updateHashtagOrder,
+      deleteHashtagOrder,
+      logo,
+      updateLogo,
+      brandingPartners,
+      addBrandingPartner,
+      updateBrandingPartner,
+      deleteBrandingPartner,
+      notifications,
+      addNotification,
+      markNotificationAsRead,
+      deleteNotification,
+      paymentConfig,
+      updatePaymentConfig
     }}>
       {children}
     </AuthContext.Provider>

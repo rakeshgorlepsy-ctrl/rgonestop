@@ -1,39 +1,36 @@
 .hero-section {
   padding: 0 1.5rem;
   margin-top: 0.5rem;
-  margin-bottom: 1.5rem;
+  margin-bottom: 0.5rem;
 }
 
 .hero-carousel-wrapper {
+  position: relative; /* Enabled for absolute position indicators */
   overflow: hidden; /* Hide horizontal overflow */
   width: 100%;
+  border-radius: var(--border-radius-lg);
 }
 
 .hero-grid-slider {
   display: flex;
-  gap: 1.5rem;
   width: 100%;
+  gap: 0; /* No gaps for smooth full-width sliding */
 }
 
 .hero-banner-card {
   position: relative;
-  border-radius: var(--border-radius-lg);
-  overflow: hidden;
-  box-shadow: var(--shadow-sm);
+  width: 100%;
+  flex: 0 0 100%; 
+  aspect-ratio: 1252 / 400; /* Proportional ratio to achieve exactly 400px height at desktop size (1252px container width) */
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: flex-start; /* Changed to left */
-  text-align: left;        /* Changed to left */
-  transition: box-shadow 0.4s ease; /* removed transform hover scaling to prevent jitter in slider */
-  padding: 1.5rem;
-  /* 
-    Calculate exact width: 
-    3 items visible -> (100% / 3) - (remaining gap space proportionally)
-    gap is 1.5rem. 2 gaps for 3 items = 3rem. 3rem/3 = 1rem.
-  */
-  flex: 0 0 calc(33.333% - 1rem); 
-  min-height: 220px;
+  align-items: flex-start;
+  text-align: left;
+  padding: 3rem; /* Generous padding on desktop */
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow 0.4s ease;
 }
 
 .hero-banner-card:hover {
@@ -53,81 +50,151 @@
 }
 
 .hero-banner-card:hover .hero-background {
-  transform: scale(1.05); /* Subtler zoom */
+  transform: scale(1.03); /* Subtle zoom */
 }
 
-.hero-overlay {
+/* Indicators container */
+.hero-indicators {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 1;
+  bottom: 1.25rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 0.5rem;
+  z-index: 10;
 }
 
-.hero-content {
+/* Sleek dots */
+.hero-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.4);
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  padding: 0;
+}
+
+/* Pill-shaped active dot */
+.hero-dot.active {
+  width: 24px;
+  border-radius: 4px;
+  background-color: var(--white);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.hero-dot:hover {
+  background-color: rgba(255, 255, 255, 0.8);
+}
+
+/* Mobile & Tablet responsiveness maintaining exact same ratio */
+@media (max-width: 768px) {
+  .hero-banner-card {
+    padding: 1rem 1.5rem; /* Compact padding */
+  }
+
+  .hero-indicators {
+    bottom: 0.8rem;
+    gap: 0.4rem;
+  }
+
+  .hero-dot {
+    width: 6px;
+    height: 6px;
+  }
+
+  .hero-dot.active {
+    width: 18px;
+    border-radius: 3px;
+  }
+}
+
+/* ── SKELETON LOADING ── */
+.hero-skeleton-box {
+  width: 100%;
+  aspect-ratio: 1252 / 400;
+  border-radius: var(--border-radius-lg);
+  overflow: hidden;
+  position: relative;
+  background: #e2e8f0;
+}
+.hero-skeleton-shimmer {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, #e2e8f0 0%, #f8fafc 40%, #e2e8f0 80%);
+  background-size: 600px 100%;
+  animation: heroShimmer 1.6s infinite linear;
+}
+@keyframes heroShimmer {
+  0%   { background-position: -600px 0; }
+  100% { background-position: 600px 0; }
+}
+
+/* ── EMPTY STATE ── */
+.hero-empty-box {
+  width: 100%;
+  aspect-ratio: 1252 / 400;
+  border-radius: var(--border-radius-lg);
+  background: #f1f5f9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #94a3b8;
+  font-style: italic;
+  font-size: 0.95rem;
+}
+
+/* ── BANNER TEXT OVERLAY ── */
+.hero-banner-overlay {
   position: relative;
   z-index: 2;
-  color: var(--white);
   display: flex;
   flex-direction: column;
-  align-items: flex-start; /* Changed to left */
-  height: 100%;
-  justify-content: flex-end; /* Text and buttons at the bottom */
-  width: 100%;
+  gap: 0.5rem;
+  max-width: 520px;
 }
-
-.hero-content h2 {
-  font-size: 1.3rem; /* Smaller, professional */
-  font-weight: 700;
-  color: var(--white);
+.hero-banner-title {
+  font-size: clamp(1.4rem, 3vw, 2.4rem);
+  font-weight: 800;
+  color: #ffffff;
+  text-shadow: 0 2px 12px rgba(0,0,0,0.55);
+  margin: 0;
   line-height: 1.2;
-  margin-bottom: 0.4rem;
-  letter-spacing: -0.2px;
-  text-shadow: 0 2px 4px rgba(0,0,0,0.15);
 }
-
-.hero-content p {
-  font-size: 0.85rem; /* Smaller */
-  opacity: 0.85;
-  margin-bottom: 1.2rem;
+.hero-banner-subtitle {
+  font-size: clamp(0.85rem, 1.5vw, 1.1rem);
+  color: rgba(255,255,255,0.92);
+  text-shadow: 0 1px 6px rgba(0,0,0,0.4);
+  margin: 0;
   font-weight: 400;
-  line-height: 1.4;
-  max-width: 90%;
+}
+.hero-banner-cta {
+  display: inline-block;
+  margin-top: 0.5rem;
+  background: rgba(255,255,255,0.22);
+  backdrop-filter: blur(8px);
+  border: 1.5px solid rgba(255,255,255,0.5);
+  color: #ffffff;
+  padding: 0.5rem 1.25rem;
+  border-radius: 50px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  transition: background 0.25s, transform 0.2s;
+  align-self: flex-start;
+}
+.hero-banner-card:hover .hero-banner-cta {
+  background: rgba(255,255,255,0.35);
+  transform: translateX(4px);
+}
+/* Darken background slightly so text is readable */
+.hero-banner-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.1) 60%, transparent 100%);
+  z-index: 1;
+  pointer-events: none;
 }
 
-.hero-banner-card .btn-primary {
-  padding: 0.5rem 1.2rem;
-  font-size: 0.8rem;
-  border-radius: 4px; /* Professional squared button */
-  background-color: var(--white);
-  color: var(--primary-color);
-  font-weight: 600;
-  border: none;
-  transition: all 0.2s ease;
-}
-
-.hero-banner-card:hover .btn-primary {
-  background-color: var(--primary-color);
-  color: var(--white);
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-}
-
-/* Tablet / Mobile Sliding View */
-@media (max-width: 992px) {
-  .hero-grid-slider {
-    gap: 1rem;
-  }
-  
-  .hero-banner-card {
-    /* Show 1 at a time on mobile */
-    flex: 0 0 100%; 
-  }
-}
-
-@media (min-width: 993px) and (max-width: 1200px) {
-  .hero-banner-card {
-    /* Show 2 at a time on medium tablets out of curiosity */
-    flex: 0 0 calc(50% - 0.75rem); 
-  }
-}

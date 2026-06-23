@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { Instagram, Phone, Mail, MapPin, MessageCircle } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 import './Footer.css';
 
 const instagramMocks = [
@@ -14,12 +15,14 @@ const instagramMocks = [
 ];
 
 const Footer = ({ brandTheme = 'light', instagramLink = 'https://www.instagram.com/tagme_24/', whatsappNumber = '+91 6301919669' }) => {
+  const { logo } = useAuth();
+
   return (
     <footer className={`footer ${brandTheme === 'dark' ? 'footer-dark' : ''}`}>
       <div className="container footer-container">
         
         <div className="footer-brand">
-          <img src="/assets/logo.png" alt="RG OneStop" className="footer-logo-image" />
+          <img src={logo} alt="RG OneStop" className="footer-logo-image" />
           <p>Your ultimate destination for premium, personalized products and printing services. We bring your special moments to life.</p>
           <div className="social-links">
             <a href={instagramLink} target="_blank" rel="noopener noreferrer" className="social-box instagram" aria-label="Instagram">

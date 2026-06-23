@@ -10,7 +10,7 @@ const products = [
   { id: 4, title: 'Custom Magic Mug', price: '₹399', oldPrice: '₹599', image: 'https://images.unsplash.com/photo-1517256011261-502111065939?q=80&w=600&auto=format&fit=crop', category: 'Surprise' },
 ];
 
-const HMTrending = ({ title = "Trending Now", subtitle = "Explore our most popular photo gifts" }) => {
+const HMTrending = ({ title = "Trending Now", subtitle = "Explore our most popular photo gifts", onOrder }) => {
   return (
     <section className="hm-trending-section hm-section-padding">
       <div className="hm-container">
@@ -30,7 +30,7 @@ const HMTrending = ({ title = "Trending Now", subtitle = "Explore our most popul
                 <div className="hm-product-pricing">
                   <span className="hm-tagline">Price on Request</span>
                 </div>
-                <button className="hm-btn accent">Add to Cart</button>
+                <button className="hm-btn accent" onClick={() => onOrder && onOrder(product)}>Order Now</button>
               </div>
             </div>
           ))}

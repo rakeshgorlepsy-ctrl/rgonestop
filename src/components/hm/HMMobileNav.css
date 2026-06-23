@@ -50,16 +50,37 @@
   transition: color 0.3s ease;
 }
 
-.hm-mobile-nav-item:hover,
-.hm-mobile-nav-item:active,
-.hm-mobile-nav-item.active {
+/* Theme Specific Active States */
+.hm-mobile-nav.rg-theme .hm-mobile-nav-item:hover,
+.hm-mobile-nav.rg-theme .hm-mobile-nav-item:active,
+.hm-mobile-nav.rg-theme .hm-mobile-nav-item.active {
+  color: var(--primary-color, #1F3A8A);
+}
+
+.hm-mobile-nav.rg-theme .hm-mobile-nav-item:hover svg,
+.hm-mobile-nav.rg-theme .hm-mobile-nav-item:active svg,
+.hm-mobile-nav.rg-theme .hm-mobile-nav-item.active svg {
+  color: var(--primary-color, #1F3A8A);
+}
+
+.hm-mobile-nav.rg-theme .hm-mobile-nav-avatar {
+  border: 1.5px solid var(--primary-color, #1F3A8A);
+}
+
+.hm-mobile-nav.hm-theme .hm-mobile-nav-item:hover,
+.hm-mobile-nav.hm-theme .hm-mobile-nav-item:active,
+.hm-mobile-nav.hm-theme .hm-mobile-nav-item.active {
   color: #E91E63;
 }
 
-.hm-mobile-nav-item:hover svg,
-.hm-mobile-nav-item:active svg,
-.hm-mobile-nav-item.active svg {
+.hm-mobile-nav.hm-theme .hm-mobile-nav-item:hover svg,
+.hm-mobile-nav.hm-theme .hm-mobile-nav-item:active svg,
+.hm-mobile-nav.hm-theme .hm-mobile-nav-item.active svg {
   color: #E91E63;
+}
+
+.hm-mobile-nav.hm-theme .hm-mobile-nav-avatar {
+  border: 1.5px solid #E91E63;
 }
 
 /* WhatsApp Highlight */
@@ -89,6 +110,5 @@
   height: 24px;
   border-radius: 50%;
   object-fit: cover;
-  border: 1.5px solid #E91E63;
 }
 

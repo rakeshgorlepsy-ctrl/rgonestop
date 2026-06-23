@@ -8,14 +8,26 @@ import './ServicesSection.css';
 const ServicesSection = () => {
   const { businesses, currentCity, setAddBusinessModalOpen, user, setLoginModalOpen } = useAuth();
 
+  const isClientCategory = (categoryName) => {
+    if (!categoryName) return false;
+    const name = categoryName.toLowerCase();
+    return (
+      name.includes("master xerox") ||
+      name.includes("hashtag memories") ||
+      name.includes("flex & banner") ||
+      name.includes("binding & stationer") ||
+      name.includes("creative graphic")
+    );
+  };
+
   // Filter only verified businesses for the active city
   const localVerified = businesses.filter(
-    (b) => b.verified && b.city.toLowerCase() === currentCity.toLowerCase()
+    (b) => b.verified && !isClientCategory(b.category) && b.city.toLowerCase() === currentCity.toLowerCase()
   );
 
   // Fallback: If no verified listings in this city, get any other verified listings to show as "Featured"
   const otherVerified = businesses.filter(
-    (b) => b.verified && b.city.toLowerCase() !== currentCity.toLowerCase()
+    (b) => b.verified && !isClientCategory(b.category) && b.city.toLowerCase() !== currentCity.toLowerCase()
   );
 
   const handleRegisterClick = () => {

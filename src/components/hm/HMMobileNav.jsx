@@ -21,6 +21,8 @@ const HMMobileNav = () => {
     return () => clearTimeout(timer);
   }, []);
 
+  if (pathname === '/master-xerox') return null;
+
   // Use the right WhatsApp number per page
   const whatsappNumber = isHMPage ? "916301919669" : "916301919669";
   const whatsappMessage = isHMPage
@@ -51,7 +53,7 @@ const HMMobileNav = () => {
   };
 
   return (
-    <nav className="hm-mobile-nav">
+    <nav className={`hm-mobile-nav ${isHMPage ? 'hm-theme' : 'rg-theme'}`}>
       {/* Home */}
       <Link href="/" className={`hm-mobile-nav-item ${isHomePage ? 'active' : ''}`}>
         <Home size={22} />

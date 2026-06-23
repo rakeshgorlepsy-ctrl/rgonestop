@@ -22,8 +22,19 @@ const CITIES = [
 ];
 
 const AddBusinessModal = () => {
-  const { isAddBusinessModalOpen, setAddBusinessModalOpen, addBusiness, user } = useAuth();
+  const { isAddBusinessModalOpen, setAddBusinessModalOpen, addBusiness, user, serviceCategories } = useAuth();
   
+  // Only use dynamic service categories from the database
+  const dynamicCategories = [];
+  if (serviceCategories && serviceCategories.length > 0) {
+    serviceCategories.forEach(scat => {
+      const name = scat.title || scat.name;
+      if (name && !dynamicCategories.includes(name)) {
+        dynamicCategories.push(name);
+      }
+    });
+  }
+
   // Form Fields State
   const [formData, setFormData] = useState({
     businessName: '',
@@ -111,42 +122,91 @@ const AddBusinessModal = () => {
     }
   };
 
-  // File Readers for instant client-side preview
-  const handleLogoChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      if (file.size > 2 * 1024 * 1024) {
-        setErrors(prev => ({ ...prev, logo: "Logo must be under 2MB" }));
-        return;
-      }
+  // Helper to compress images client-side using canvas
+  const compressImage = (file, maxDim = 800, quality = 0.7) => {
+    return new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setLogo(reader.result);
-        setErrors(prev => ({ ...prev, logo: null }));
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          let width = img.width;
+          let height = img.height;
+
+          if (width > height) {
+            if (width > maxDim) {
+              height *= maxDim / width;
+              width = maxDim;
+            }
+          } else {
+            if (height > maxDim) {
+              width *= maxDim / height;
+              height = maxDim;
+            }
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+
+          let dataUrl;
+          if (file.type === 'image/png') {
+            dataUrl = canvas.toDataURL('image/png');
+          } else {
+            dataUrl = canvas.toDataURL('image/jpeg', quality);
+          }
+          resolve(dataUrl);
+        };
+        img.onerror = (err) => reject(err);
+        img.src = reader.result;
       };
+      reader.onerror = (err) => reject(err);
       reader.readAsDataURL(file);
+    });
+  };
+
+  // File Readers for instant client-side preview with compression
+  const handleLogoChange = async (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      if (file.size > 50 * 1024 * 1024) {
+        setErrors(prev => ({ ...prev, logo: "Logo must be under 50MB" }));
+        return;
+      }
+      try {
+        const compressed = await compressImage(file, 200, 0.5);
+        setLogo(compressed);
+        setErrors(prev => ({ ...prev, logo: null }));
+      } catch (err) {
+        console.error("Logo compression failed:", err);
+        setErrors(prev => ({ ...prev, logo: "Failed to process logo image" }));
+      }
     }
   };
 
-  const handlePhotosChange = (e) => {
+  const handlePhotosChange = async (e) => {
     const files = Array.from(e.target.files);
     if (files.length + photos.length > 5) {
       setErrors(prev => ({ ...prev, photos: "Maximum 5 business photos allowed" }));
       return;
     }
 
-    files.forEach(file => {
-      if (file.size > 3 * 1024 * 1024) {
-        setErrors(prev => ({ ...prev, photos: "Each photo must be under 3MB" }));
-        return;
+    for (let file of files) {
+      if (file.size > 50 * 1024 * 1024) {
+        setErrors(prev => ({ ...prev, photos: "Each photo must be under 50MB" }));
+        continue;
       }
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setPhotos(prev => [...prev, reader.result]);
+      try {
+        const compressed = await compressImage(file, 500, 0.5);
+        setPhotos(prev => [...prev, compressed]);
         setErrors(prev => ({ ...prev, photos: null }));
-      };
-      reader.readAsDataURL(file);
-    });
+      } catch (err) {
+        console.error("Photo compression failed:", err);
+        setErrors(prev => ({ ...prev, photos: "Failed to process one or more photos" }));
+      }
+    }
   };
 
   const handleRemovePhoto = (idxToRemove) => {
@@ -178,20 +238,29 @@ const AddBusinessModal = () => {
 
     setIsSubmitting(true);
 
-    // Simulate high-fidelity database query & verification check
-    setTimeout(() => {
-      const businessObject = {
-        ...formData,
-        logo,
-        photos,
-        userEmail: user?.email || 'suresh.rg@gmail.com',
-        userAvatar: user?.avatar || 'https://api.dicebear.com/7.x/adventurer/svg?seed=Suresh'
-      };
+    // Simulate database query & verification check
+    setTimeout(async () => {
+      try {
+        const businessObject = {
+          ...formData,
+          logo,
+          photos,
+          userEmail: user?.email || 'guest@rgonestop.com',
+          userAvatar: user?.avatar || `https://api.dicebear.com/7.x/adventurer/svg?seed=${user?.name || 'Guest'}`
+        };
 
-      const savedBusiness = addBusiness(businessObject);
-      setRegisteredDetails(savedBusiness);
-      setIsSubmitting(false);
-      setSubmitSuccess(true);
+        const savedBusiness = await addBusiness(businessObject);
+        setRegisteredDetails(savedBusiness);
+        setIsSubmitting(false);
+        setSubmitSuccess(true);
+      } catch (err) {
+        console.error("Firestore write failed:", err);
+        setErrors(prev => ({
+          ...prev,
+          submit: err.message || "Failed to register business. Please check connection and permissions."
+        }));
+        setIsSubmitting(false);
+      }
     }, 1800);
   };
 
@@ -246,7 +315,7 @@ const AddBusinessModal = () => {
                         className={errors.category ? 'error' : ''}
                       >
                         <option value="">-- Choose Category --</option>
-                        {CATEGORIES.map((cat, i) => (
+                        {dynamicCategories.map((cat, i) => (
                           <option key={i} value={cat}>{cat}</option>
                         ))}
                       </select>
@@ -393,7 +462,7 @@ const AddBusinessModal = () => {
                         <div className="dropzone-placeholder">
                           <Upload className="upload-icon" size={24} />
                           <span>Click or Drag Logo to Upload</span>
-                          <span className="file-hint">JPG, PNG, WebP up to 2MB</span>
+                           <span className="file-hint">JPG, PNG, WebP (auto-compressed)</span>
                         </div>
                       )}
                     </div>
@@ -418,7 +487,7 @@ const AddBusinessModal = () => {
                       <div className="dropzone-placeholder">
                         <ImageIcon className="upload-icon" size={24} />
                         <span>Upload Business Showcase Photos ({photos.length}/5)</span>
-                        <span className="file-hint">Images up to 3MB each</span>
+                        <span className="file-hint">Any file size (auto-compressed)</span>
                       </div>
                     </div>
                     {errors.photos && <span className="error-message">{errors.photos}</span>}
@@ -440,6 +509,12 @@ const AddBusinessModal = () => {
 
               </div>
 
+              {errors.submit && (
+                <div className="error-message" style={{ color: '#ef4444', fontSize: '0.85rem', fontWeight: '600', textAlign: 'center', marginBottom: '1rem', width: '100%' }}>
+                  ❌ {errors.submit}
+                </div>
+              )}
+
               {/* Action buttons */}
               <div className="form-footer-actions">
                 <button type="button" className="btn btn-outline cancel-btn" onClick={handleClose}>
@@ -460,31 +535,36 @@ const AddBusinessModal = () => {
           </div>
         ) : (
           <div className="success-overlay-container">
-            <div className="success-card">
-              <div className="success-checkmark-wrapper">
-                <CheckCircle2 className="success-checkmark-icon" size={72} />
+            <div className="success-card animate-fade-in" style={{ padding: '2.5rem 2rem', textAlign: 'center' }}>
+              <div className="success-checkmark-wrapper" style={{ margin: '0 auto 1.5rem', background: '#dcfce7', borderRadius: '50%', width: '96px', height: '96px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <CheckCircle2 className="success-checkmark-icon" size={64} style={{ color: '#16a34a' }} />
               </div>
-              <h2 className="success-title">Listing Created Successfully!</h2>
-              <p className="success-desc">
-                Congratulations! <strong>{registeredDetails?.businessName}</strong> has been listed under the <strong>{registeredDetails?.category}</strong> category and is now active in <strong>{registeredDetails?.city}</strong>.
+              <h2 className="success-title" style={{ fontSize: '1.8rem', fontWeight: '800', color: '#0f172a', marginBottom: '0.75rem' }}>Listing Submitted!</h2>
+              <p className="success-desc" style={{ fontSize: '1.1rem', fontWeight: '600', color: '#1e293b', lineHeight: '1.6', margin: '0 auto 1.5rem', maxWidth: '420px' }}>
+                Congratulations! Your business <strong>{registeredDetails?.businessName || formData.businessName}</strong> is under review.
+              </p>
+              <p style={{ fontSize: '0.875rem', color: '#64748b', marginBottom: '1.5rem', lineHeight: '1.5' }}>
+                Your business will be listed under the <strong>{registeredDetails?.category || formData.category}</strong> category once it has been verified and approved by the admin.
               </p>
 
-              <div className="success-details-summary">
-                <div className="summary-row">
-                  <span className="summary-label">Listed Area:</span>
-                  <span className="summary-value">{registeredDetails?.city}</span>
+              <div className="success-details-summary" style={{ background: 'rgba(0,0,0,0.02)', borderRadius: '12px', padding: '1.25rem', border: '1px solid rgba(0,0,0,0.05)', marginBottom: '1.75rem', textAlign: 'left' }}>
+                <div className="summary-row" style={{ display: 'flex', justifyContent: 'space-between', padding: '0.4rem 0', borderBottom: '1px solid rgba(0,0,0,0.04)', fontSize: '0.85rem' }}>
+                  <span className="summary-label" style={{ color: '#64748b', fontWeight: '500' }}>Listed Area:</span>
+                  <span className="summary-value" style={{ color: '#0f172a', fontWeight: '700' }}>{registeredDetails?.city || formData.city}</span>
                 </div>
-                <div className="summary-row">
-                  <span className="summary-label">Contact Number:</span>
-                  <span className="summary-value">+91 {registeredDetails?.contactNumber}</span>
+                <div className="summary-row" style={{ display: 'flex', justifyContent: 'space-between', padding: '0.4rem 0', borderBottom: '1px solid rgba(0,0,0,0.04)', fontSize: '0.85rem' }}>
+                  <span className="summary-label" style={{ color: '#64748b', fontWeight: '500' }}>Contact Number:</span>
+                  <span className="summary-value" style={{ color: '#0f172a', fontWeight: '700' }}>+91 {registeredDetails?.contactNumber || formData.contactNumber}</span>
                 </div>
-                <div className="summary-row">
-                  <span className="summary-label">Registered Owner:</span>
-                  <span className="summary-value">{user?.name || "Suresh Kumar"} ({user?.email || "suresh.rg@gmail.com"})</span>
+                <div className="summary-row" style={{ display: 'flex', justifyContent: 'space-between', padding: '0.4rem 0', fontSize: '0.85rem' }}>
+                  <span className="summary-label" style={{ color: '#64748b', fontWeight: '500' }}>Registered Owner:</span>
+                  <span className="summary-value" style={{ color: '#0f172a', fontWeight: '700', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '220px', whiteSpace: 'nowrap' }} title={user ? `${user.name} (${user.email})` : "Guest User"}>
+                    {user ? `${user.name} (${user.email})` : (registeredDetails?.userEmail || formData.userEmail || "Guest User")}
+                  </span>
                 </div>
               </div>
 
-              <button className="btn btn-primary close-success-btn" onClick={handleClose}>
+              <button className="btn btn-primary close-success-btn" onClick={handleClose} style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', fontSize: '1rem', fontWeight: '700' }}>
                 Go to Dashboard / Close
               </button>
             </div>

@@ -1,0 +1,43 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() && (
+        request.auth.token.email.matches('.*@gmail\\.com') ||
+        firestore.get(/databases/(default)/documents/users/$(request.auth.uid)).data.role == 'admin'
+      );
+    }
+
+    // Admin has full access to everything in the bucket
+    match /{allPaths=**} {
+      allow read, write: if isAdmin();
+    }
+
+    // Public folder: Anyone can read, only admin can write/update
+    match /public/{allPaths=**} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // User-specific folders: Only the authenticated owner can read/write
+    match /users/{userId}/{allPaths=**} {
+      allow read, write: if isOwner(userId);
+    }
+
+    // Print orders folder: anyone can upload, only admin can read
+    match /print_orders/{allPaths=**} {
+      allow write: if true;
+      allow read: if isAdmin();
+    }
+  }
+}
