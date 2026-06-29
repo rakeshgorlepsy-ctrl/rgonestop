@@ -158,8 +158,8 @@ const AdminDashboard = () => {
     }
   }, [paymentConfig]);
 
-  // Admin check: reads 'role' field or checks rakeshgorle.psy@gmail.com or suffix @gmail.com for local developer test access
-  const isAdmin = user && (user.role === 'admin' || user.email === 'rakeshgorle.psy@gmail.com' || user.email.endsWith('@gmail.com'));
+  // Admin check: strictly reads 'role' field
+  const isAdmin = user && user.role === 'admin';
   console.log('🔐 Admin check →', { email: user?.email, role: user?.role, isAdmin });
 
   // ── Auth handlers ────────────────────────────────────────────────

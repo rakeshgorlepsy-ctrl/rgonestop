@@ -201,38 +201,39 @@ export const AuthProvider = ({ children }) => {
         const result = await signInWithPopup(auth, provider);
         const uid = result.user.uid;
 
-        // Base user profile
-        const baseProfile = {
-          uid,
-          name: result.user.displayName,
-          email: result.user.email,
-          avatar: result.user.photoURL || `https://api.dicebear.com/7.x/adventurer/svg?seed=${result.user.displayName}`,
-          createdAt: new Date().toISOString(),
-        };
-
-        // Write to Firestore (merge: true keeps existing role/fields intact)
-        try {
-          await setDoc(doc(db, "users", uid), baseProfile, { merge: true });
-          console.log("✅ User profile synced to Firestore:", result.user.email);
-        } catch (firestoreError) {
-          console.error("⚠️ Firestore users write failed (check rules):", firestoreError);
-        }
-
-        // Fetch full user document (includes role set manually in Firestore)
-        let role = null;
+        // Fetch existing user document to check and preserve role, or assign default 'user'
+        let role = 'user';
         try {
           const userSnap = await getDoc(doc(db, "users", uid));
           if (userSnap.exists()) {
-            role = userSnap.data().role || null;
-            console.log("🔑 Fetched role from Firestore:", role);
+            role = userSnap.data().role || 'user';
+            console.log("🔑 Existing user found, using role:", role);
           } else {
-            console.warn("⚠️ User document not found in Firestore for uid:", uid);
+            console.log("🆕 New user login, assigning default role: 'user'");
           }
         } catch (fetchError) {
           console.error("⚠️ Failed to fetch user role from Firestore:", fetchError);
         }
 
-        const realUser = { ...baseProfile, role };
+        // Base user profile containing the determined role
+        const baseProfile = {
+          uid,
+          name: result.user.displayName,
+          email: result.user.email,
+          avatar: result.user.photoURL || `https://api.dicebear.com/7.x/adventurer/svg?seed=${result.user.displayName}`,
+          role,
+          createdAt: new Date().toISOString(),
+        };
+
+        // Write user profile to Firestore (merge: true updates/creates profile with role)
+        try {
+          await setDoc(doc(db, "users", uid), baseProfile, { merge: true });
+          console.log("✅ User profile synced to Firestore with role:", result.user.email, role);
+        } catch (firestoreError) {
+          console.error("⚠️ Firestore users write failed (check rules):", firestoreError);
+        }
+
+        const realUser = { ...baseProfile };
         console.log("👤 Final user object:", realUser);
 
         setUser(realUser);
